@@ -1,22 +1,23 @@
-[gd_scene load_steps=5 format=3 uid="uid://biw35awrn2a6w"]
+[gd_scene load_steps=6 format=3 uid="uid://biw35awrn2a6w"]
 
-[ext_resource type="PackedScene" uid="uid://bco8y64xv5o0" path="res://scenes/cpu_transaction_ui.tscn" id="1_f3ao2"]
+[ext_resource type="PackedScene" uid="uid://bco8y64xv5o0" path="res://scenes/cpu_ui.tscn" id="1_f3ao2"]
 [ext_resource type="Script" path="res://scenes/system_ui.gd" id="1_lx7g6"]
 [ext_resource type="PackedScene" uid="uid://dhhcghptane4n" path="res://scenes/ram_ui.tscn" id="2_pve52"]
 [ext_resource type="Texture2D" uid="uid://b6c1l7vx6u4hj" path="res://assets/colored_tilemap.png" id="4_6x3pj"]
+[ext_resource type="PackedScene" uid="uid://cal5d4vh1082r" path="res://scenes/settings.tscn" id="5_ufjsy"]
 
 [node name="SystemUI" type="Node2D"]
 script = ExtResource("1_lx7g6")
 
 [node name="CPU0" parent="." instance=ExtResource("1_f3ao2")]
-position = Vector2(64, 266)
+position = Vector2(65, 266)
 
 [node name="CPU1" parent="." instance=ExtResource("1_f3ao2")]
-position = Vector2(324, 267)
+position = Vector2(325, 267)
 id = 1
 
 [node name="CPU2" parent="." instance=ExtResource("1_f3ao2")]
-position = Vector2(584, 266)
+position = Vector2(585, 266)
 id = 2
 
 [node name="RamUI" parent="." instance=ExtResource("2_pve52")]
@@ -386,3 +387,6 @@ scale = Vector2(1.03998, 2)
 texture = ExtResource("4_6x3pj")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
+
+[node name="Settings" parent="." instance=ExtResource("5_ufjsy")]
+position = Vector2(664, 23)

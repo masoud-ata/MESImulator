@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/cpu_ui.gd" id="1_8ai7d"]
 
-[node name="CPU" type="Node2D"]
+[node name="CPUUI" type="Node2D"]
 script = ExtResource("1_8ai7d")
 
 [node name="CPUCacheUI" type="Node2D" parent="."]
@@ -85,7 +85,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="CPUTransactionUI" type="Node2D" parent="."]
-position = Vector2(1, 90)
+position = Vector2(2, 90)
 
 [node name="PanelContainer" type="PanelContainer" parent="CPUTransactionUI"]
 offset_right = 40.0

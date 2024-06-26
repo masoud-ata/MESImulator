@@ -1,6 +1,8 @@
 extends Node
 
 
+signal animation_speed_factor_changed(factor: float)
+
 signal read_requested(cpu_id: int, memory_address: int)
 signal write_requested(cpu_id: int, memory_address: int)
 
