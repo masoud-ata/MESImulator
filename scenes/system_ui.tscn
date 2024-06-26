@@ -1,0 +1,388 @@
+[gd_scene load_steps=5 format=3 uid="uid://biw35awrn2a6w"]
+
+[ext_resource type="PackedScene" uid="uid://bco8y64xv5o0" path="res://scenes/cpu_transaction_ui.tscn" id="1_f3ao2"]
+[ext_resource type="Script" path="res://scenes/system_ui.gd" id="1_lx7g6"]
+[ext_resource type="PackedScene" uid="uid://dhhcghptane4n" path="res://scenes/ram_ui.tscn" id="2_pve52"]
+[ext_resource type="Texture2D" uid="uid://b6c1l7vx6u4hj" path="res://assets/colored_tilemap.png" id="4_6x3pj"]
+
+[node name="SystemUI" type="Node2D"]
+script = ExtResource("1_lx7g6")
+
+[node name="CPU0" parent="." instance=ExtResource("1_f3ao2")]
+position = Vector2(64, 266)
+
+[node name="CPU1" parent="." instance=ExtResource("1_f3ao2")]
+position = Vector2(324, 267)
+id = 1
+
+[node name="CPU2" parent="." instance=ExtResource("1_f3ao2")]
+position = Vector2(584, 266)
+id = 2
+
+[node name="RamUI" parent="." instance=ExtResource("2_pve52")]
+position = Vector2(320, 12)
+
+[node name="Buses" type="Node2D" parent="."]
+position = Vector2(0, -22)
+
+[node name="DataBus" type="CanvasGroup" parent="Buses"]
+position = Vector2(-91, -4)
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/DataBus"]
+position = Vector2(831, 237)
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/DataBus"]
+position = Vector2(479.5, 237)
+scale = Vector2(85.875, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="Arrowhead2" type="Sprite2D" parent="Buses/DataBus"]
+position = Vector2(135, 237)
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="AddressBus" type="CanvasGroup" parent="Buses"]
+position = Vector2(-90, -37)
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/AddressBus"]
+position = Vector2(831, 237)
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/AddressBus"]
+position = Vector2(479.5, 237)
+scale = Vector2(85.875, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="Arrowhead2" type="Sprite2D" parent="Buses/AddressBus"]
+position = Vector2(135, 237)
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Cache0DataOut" type="CanvasGroup" parent="Buses"]
+position = Vector2(152, 263)
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/Cache0DataOut"]
+position = Vector2(0, -17)
+rotation = -1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/Cache0DataOut"]
+position = Vector2(-9.69701e-06, 3.32126)
+rotation = -1.5708
+scale = Vector2(3.71243, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="Cache0DataIn" type="CanvasGroup" parent="Buses"]
+position = Vector2(152, 263)
+rotation = -3.14159
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/Cache0DataIn"]
+position = Vector2(0, -14)
+rotation = -1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/Cache0DataIn"]
+position = Vector2(1.65333e-05, 10.5672)
+rotation = -1.5708
+scale = Vector2(4.18454, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="Cache0AddressIn" type="CanvasGroup" parent="Buses"]
+position = Vector2(106, 244)
+rotation = -3.14159
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/Cache0AddressIn"]
+position = Vector2(0, -29)
+rotation = -1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/Cache0AddressIn"]
+position = Vector2(4.83758e-06, 10.3364)
+rotation = -1.5708
+scale = Vector2(7.81333, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="Cache0AddressOut" type="CanvasGroup" parent="Buses"]
+position = Vector2(106, 244)
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/Cache0AddressOut"]
+position = Vector2(0, -31)
+rotation = -1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/Cache0AddressOut"]
+position = Vector2(-6.94611e-06, 7.08118)
+rotation = -1.5708
+scale = Vector2(7.95894, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="Cache1DataOut" type="CanvasGroup" parent="Buses"]
+position = Vector2(410, 263)
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/Cache1DataOut"]
+position = Vector2(0, -17)
+rotation = -1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/Cache1DataOut"]
+position = Vector2(-7.79672e-06, 3.8462)
+rotation = -1.5708
+scale = Vector2(3.58119, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="Cache1DataIn" type="CanvasGroup" parent="Buses"]
+position = Vector2(410, 263)
+rotation = 3.14159
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/Cache1DataIn"]
+position = Vector2(0, -14)
+rotation = -1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/Cache1DataIn"]
+position = Vector2(1.65333e-05, 10.5672)
+rotation = -1.5708
+scale = Vector2(4.18455, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="Cache1AddressIn" type="CanvasGroup" parent="Buses"]
+position = Vector2(366, 248)
+rotation = -3.14159
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/Cache1AddressIn"]
+position = Vector2(0, -29)
+rotation = -1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/Cache1AddressIn"]
+position = Vector2(1.20939e-05, 12.3409)
+rotation = -1.5708
+scale = Vector2(8.31446, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="Cache1AddressOut" type="CanvasGroup" parent="Buses"]
+position = Vector2(366, 244)
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/Cache1AddressOut"]
+position = Vector2(0, -31)
+rotation = -1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/Cache1AddressOut"]
+position = Vector2(-5.58702e-06, 7.45662)
+rotation = -1.5708
+scale = Vector2(7.86508, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="Cache2DataOut" type="CanvasGroup" parent="Buses"]
+position = Vector2(669, 263)
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/Cache2DataOut"]
+position = Vector2(0, -17)
+rotation = -1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/Cache2DataOut"]
+position = Vector2(-6.85674e-06, 4.10587)
+rotation = -1.5708
+scale = Vector2(3.51627, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="Cache2DataIn" type="CanvasGroup" parent="Buses"]
+position = Vector2(669, 263)
+rotation = 3.14159
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/Cache2DataIn"]
+position = Vector2(0, -14)
+rotation = -1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/Cache2DataIn"]
+position = Vector2(1.58025e-05, 10.3653)
+rotation = -1.5708
+scale = Vector2(4.13408, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="Cache2AddressIn" type="CanvasGroup" parent="Buses"]
+position = Vector2(623, 248)
+rotation = -3.14159
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/Cache2AddressIn"]
+position = Vector2(0, -29)
+rotation = -1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/Cache2AddressIn"]
+position = Vector2(1.06661e-05, 11.9465)
+rotation = -1.5708
+scale = Vector2(8.21585, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="Cache2AddressOut" type="CanvasGroup" parent="Buses"]
+position = Vector2(623, 242)
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/Cache2AddressOut"]
+position = Vector2(0, -29)
+rotation = -1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/Cache2AddressOut"]
+position = Vector2(-6.77626e-21, 9)
+rotation = -1.5708
+scale = Vector2(7.47924, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="RamDataIn" type="CanvasGroup" parent="Buses"]
+position = Vector2(410, 205)
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/RamDataIn"]
+position = Vector2(0, -26)
+rotation = -1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/RamDataIn"]
+position = Vector2(1.14929e-05, 3.02565)
+rotation = -1.5708
+scale = Vector2(5.41133, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="RamDataOut" type="CanvasGroup" parent="Buses"]
+position = Vector2(410, 205)
+rotation = 3.14159
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/RamDataOut"]
+position = Vector2(2.51318e-05, -14)
+rotation = -1.5708
+scale = Vector2(2.21875, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/RamDataOut"]
+position = Vector2(3.35499e-07, 13.6753)
+rotation = -1.5708
+scale = Vector2(4.96157, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="RamAddressIn" type="CanvasGroup" parent="Buses"]
+position = Vector2(356, 172)
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/RamAddressIn"]
+position = Vector2(0, 4)
+rotation = -1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/RamAddressIn"]
+position = Vector2(1.52205e-05, 16.7158)
+rotation = -1.5708
+scale = Vector2(2.4263, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)
+
+[node name="RamAddressOut" type="CanvasGroup" parent="Buses"]
+position = Vector2(356, 172)
+rotation = 3.14159
+
+[node name="Arrowhead" type="Sprite2D" parent="Buses/RamAddressOut"]
+position = Vector2(2.3593e-05, -14)
+rotation = -1.5708
+scale = Vector2(2.28125, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(27, 63, 8, 8)
+
+[node name="Conduit" type="Sprite2D" parent="Buses/RamAddressOut"]
+position = Vector2(5.90827e-06, -2.01102)
+rotation = -1.5708
+scale = Vector2(1.03998, 2)
+texture = ExtResource("4_6x3pj")
+region_enabled = true
+region_rect = Rect2(9, 65, 8, 4)

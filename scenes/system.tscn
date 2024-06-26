@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b2ggqjrf7b6jm"]
+
+[ext_resource type="Script" path="res://scenes/system.gd" id="1_psalp"]
+
+[node name="System" type="Node"]
+script = ExtResource("1_psalp")

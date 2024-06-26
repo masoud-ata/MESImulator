@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bif3p823awsbl"]
+
+[ext_resource type="PackedScene" uid="uid://biw35awrn2a6w" path="res://scenes/system_ui.tscn" id="1_t83a6"]
+[ext_resource type="PackedScene" uid="uid://b2ggqjrf7b6jm" path="res://scenes/system.tscn" id="2_d8ena"]
+
+[node name="Program" type="Node2D"]
+
+[node name="SystemUI" parent="." instance=ExtResource("1_t83a6")]
+
+[node name="System" parent="." instance=ExtResource("2_d8ena")]

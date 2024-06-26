@@ -1,0 +1,145 @@
+[gd_scene load_steps=4 format=3 uid="uid://bco8y64xv5o0"]
+
+[ext_resource type="Script" path="res://scenes/cpu_ui.gd" id="1_8ai7d"]
+[ext_resource type="Script" path="res://scenes/cpu_transaction_ui.gd" id="1_ei2na"]
+[ext_resource type="Script" path="res://scenes/CPUCacheUI.gd" id="1_sl35f"]
+
+[node name="CPU" type="Node2D"]
+script = ExtResource("1_8ai7d")
+
+[node name="CPUCacheUI" type="Node2D" parent="."]
+script = ExtResource("1_sl35f")
+
+[node name="PanelContainer" type="PanelContainer" parent="CPUCacheUI"]
+offset_right = 114.0
+offset_bottom = 70.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CPUCacheUI/PanelContainer"]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CPUCacheUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"StoragePanelContainer"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CPUCacheUI/PanelContainer/VBoxContainer/PanelContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Status" type="Label" parent="CPUCacheUI/PanelContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_colors/font_outline_color = Color(0.14902, 0.168627, 0.266667, 1)
+theme_override_constants/outline_size = 4
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Address" type="Label" parent="CPUCacheUI/PanelContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_outline_color = Color(0.14902, 0.168627, 0.266667, 1)
+theme_override_constants/outline_size = 5
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Value" type="Label" parent="CPUCacheUI/PanelContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0.14902, 0.168627, 0.266667, 1)
+theme_override_constants/outline_size = 4
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PanelContainer2" type="PanelContainer" parent="CPUCacheUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"StoragePanelContainer"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CPUCacheUI/PanelContainer/VBoxContainer/PanelContainer2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Status" type="Label" parent="CPUCacheUI/PanelContainer/VBoxContainer/PanelContainer2/HBoxContainer"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Address" type="Label" parent="CPUCacheUI/PanelContainer/VBoxContainer/PanelContainer2/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Value" type="Label" parent="CPUCacheUI/PanelContainer/VBoxContainer/PanelContainer2/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CPUTransactionUI" type="Node2D" parent="."]
+position = Vector2(1, 90)
+script = ExtResource("1_ei2na")
+
+[node name="PanelContainer" type="PanelContainer" parent="CPUTransactionUI"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HBoxButtonsContainer" type="HBoxContainer" parent="CPUTransactionUI/PanelContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CPUTransactionUI/PanelContainer/HBoxButtonsContainer"]
+layout_mode = 2
+
+[node name="ReadA0" type="Button" parent="CPUTransactionUI/PanelContainer/HBoxButtonsContainer/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Read a0"
+
+[node name="ReadA1" type="Button" parent="CPUTransactionUI/PanelContainer/HBoxButtonsContainer/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Read a1"
+
+[node name="ReadA2" type="Button" parent="CPUTransactionUI/PanelContainer/HBoxButtonsContainer/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Read a2"
+
+[node name="ReadA3" type="Button" parent="CPUTransactionUI/PanelContainer/HBoxButtonsContainer/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Read a3"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CPUTransactionUI/PanelContainer/HBoxButtonsContainer"]
+layout_mode = 2
+
+[node name="WriteA0" type="Button" parent="CPUTransactionUI/PanelContainer/HBoxButtonsContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Write a0"
+
+[node name="WriteA1" type="Button" parent="CPUTransactionUI/PanelContainer/HBoxButtonsContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Write a1"
+
+[node name="WriteA2" type="Button" parent="CPUTransactionUI/PanelContainer/HBoxButtonsContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Write a2"
+
+[node name="WriteA3" type="Button" parent="CPUTransactionUI/PanelContainer/HBoxButtonsContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Write a3"
