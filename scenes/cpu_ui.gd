@@ -65,6 +65,13 @@ func _ready() -> void:
 	_init_contents()
 
 
+func reset() -> void:
+	for set_no in range(2):
+		cache_value[set_no].text = str(0)
+		cache_tag[set_no].text = ""
+		cache_state[set_no].text = "I"
+
+
 func _adjust_animation_speed(factor: float) -> void:
 	if is_equal_approx(factor, 0.0):
 		animation_time = DEFAULT_ANIMATION_TIME * factor
@@ -73,42 +80,42 @@ func _adjust_animation_speed(factor: float) -> void:
 
 
 func _on_read_a_0_pressed() -> void:
-	Signals.read_requested.emit(id, 0)
+	Signals.user_read_requested.emit(id, 0)
 	_animate_button(read_a_0)
 
 
 func _on_read_a_1_pressed() -> void:
-	Signals.read_requested.emit(id, 1)
+	Signals.user_read_requested.emit(id, 1)
 	_animate_button(read_a_1)
 
 
 func _on_read_a_2_pressed() -> void:
-	Signals.read_requested.emit(id, 2)
+	Signals.user_read_requested.emit(id, 2)
 	_animate_button(read_a_2)
 
 
 func _on_read_a_3_pressed() -> void:
-	Signals.read_requested.emit(id, 3)
+	Signals.user_read_requested.emit(id, 3)
 	_animate_button(read_a_3)
 
 
 func _on_write_a_0_pressed() -> void:
-	Signals.write_requested.emit(id, 0)
+	Signals.user_write_requested.emit(id, 0)
 	_animate_button(write_a_0)
 
 
 func _on_write_a_1_pressed() -> void:
-	Signals.write_requested.emit(id, 1)
+	Signals.user_write_requested.emit(id, 1)
 	_animate_button(write_a_1)
 
 
 func _on_write_a_2_pressed() -> void:
-	Signals.write_requested.emit(id, 2)
+	Signals.user_write_requested.emit(id, 2)
 	_animate_button(write_a_2)
 
 
 func _on_write_a_3_pressed() -> void:
-	Signals.write_requested.emit(id, 3)
+	Signals.user_write_requested.emit(id, 3)
 	_animate_button(write_a_3)
 
 

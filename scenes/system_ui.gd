@@ -44,8 +44,9 @@ const DEFAULT_ANIMATION_TIME = 0.5
 
 
 func _ready() -> void:
+	Signals.processor_reset_requested.connect(_reset)
 	Signals.animation_speed_factor_changed.connect(_adjust_animation_speed)
-	Signals.all_new_transaction_started.connect(_all_new_transaction_started)
+	Signals.all_new_transaction_started.connect(_clear_visuals)
 	Signals.cache_state_updated.connect(_cache_state_updated)
 	Signals.write_transaction_performed_in_cache.connect(_write_transaction_performed_in_cache)
 	Signals.read_transaction_performed_in_cache.connect(_read_transaction_performed_in_cache)
@@ -59,6 +60,13 @@ func _ready() -> void:
 
 func _adjust_animation_speed(factor: float) -> void:
 	animation_time = DEFAULT_ANIMATION_TIME * factor
+
+
+func _reset() -> void:
+	_clear_visuals()
+	for cpu in cpus:
+		cpu.reset()
+		ram_ui.reset()
 
 
 func _clear_bus_visuals() -> void:
@@ -80,7 +88,7 @@ func _clear_memory_visuals() -> void:
 	ram_ui.clear_colors()
 
 
-func _all_new_transaction_started() -> void:
+func _clear_visuals() -> void:
 	_clear_memory_visuals()
 	_clear_bus_visuals()
 	_clear_cache_visuals()
@@ -104,7 +112,7 @@ func _read_transaction_performed_in_cache(cpu_id: int, set_no: int, tag: int, st
 	Signals.transaction_finished.emit()
 
 
-func _read_transaction_started_on_bus(cpu_id: int, mem_address: int) -> void:
+func _read_transaction_started_on_bus(cpu_id: int, _mem_address: int) -> void:
 	var tween = create_tween()
 	tween.tween_property(cache_address_out_buses[cpu_id], "self_modulate", Color.SKY_BLUE, animation_time)
 	tween.tween_property(address_bus, "self_modulate", Color.SKY_BLUE, animation_time)
@@ -117,7 +125,7 @@ func _read_transaction_started_on_bus(cpu_id: int, mem_address: int) -> void:
 	Signals.transaction_finished.emit()
 
 
-func _snoop_transaction_started_on_bus(cpu_id: int, mem_address: int) -> void:
+func _snoop_transaction_started_on_bus(cpu_id: int, _mem_address: int) -> void:
 	var tween = create_tween()
 	tween.tween_property(cache_address_out_buses[cpu_id], "self_modulate", Color.SKY_BLUE, animation_time)
 	tween.tween_property(address_bus, "self_modulate", Color.SKY_BLUE, animation_time)

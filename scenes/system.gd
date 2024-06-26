@@ -27,28 +27,79 @@ var ram: Array[int] = [0, 0, 0, 0]
 
 
 func _ready() -> void:
-	Signals.read_requested.connect(read_requested)
-	Signals.write_requested.connect(write_requested)
+	Signals.user_read_requested.connect(_user_read_requested)
+	Signals.user_write_requested.connect(_user_write_requested)
+	Signals.user_reset_requested.connect(_schedule_reset)
 
 
-func read_requested(cpu_id: int, mem_address: int) -> void:
+func _schedule_reset() -> void:
+	if event_queue.is_empty():
+		_reset()
+	else:
+		event_queue.append(null)
+
+
+func _reset() -> void:
+	Signals.processor_reset_requested.emit()
+	ram = [0, 0, 0, 0]
+	for cache_id in caches:
+		caches[cache_id].tag[0] = 0
+		caches[cache_id].tag[1] = 0
+		caches[cache_id].data[0] = 0
+		caches[cache_id].data[1] = 0
+		caches[cache_id].status[0] = MesiStates.I
+		caches[cache_id].status[1] = MesiStates.I
+
+
+func _user_read_requested(cpu_id: int, mem_address: int) -> void:
+	var e = _create_event(cpu_id, mem_address, true)
+	_add_event(e)
+
+
+func _user_write_requested(cpu_id: int, mem_address: int) -> void:
+	var e = _create_event(cpu_id, mem_address, false)
+	_add_event(e)
+
+
+func _create_event(cpu_id: int, mem_address: int, is_read: bool) -> Event:
 	var e = Event.new()
-	e.is_read = true
+	e.is_read = is_read
 	e.cpu_id = cpu_id
 	e.address = mem_address
-	event_queue.append(e)
+	return e
+
+
+func _add_event(event: Event) -> void:
+	event_queue.append(event)
 	if event_queue.size() == 1 and not handling_event:
-		_handle_event()
+		_handle_events()
 
 
-func handle_read(cpu_id: int, mem_address: int) -> void:
+func _handle_events():
+	handling_event = true
+	var event = event_queue[0]
+	if event.is_read:
+		await _handle_read(event.cpu_id, event.address)
+	else:
+		await _handle_write(event.cpu_id, event.address)
+	event_queue.remove_at(0)
+	handling_event = false
+	if not event_queue.is_empty():
+		if event_queue[event_queue.size() - 1] == null:
+			event_queue.clear()
+			_reset()
+		else:
+			_handle_events()
+
+
+func _handle_read(cpu_id: int, mem_address: int) -> void:
 	var tag = mem_address >> 1
 	var set_no = mem_address % 2
 	var block_is_in_cache = caches[cpu_id].tag[set_no] == tag
 	var block_is_invalid = caches[cpu_id].status[set_no] == MesiStates.I
-	var to_be_replaced_is_dirty = caches[cpu_id].status[set_no] == MesiStates.M
+	var needs_writeback = caches[cpu_id].status[set_no] == MesiStates.M
 
-	if not block_is_in_cache and to_be_replaced_is_dirty:
+	if not block_is_in_cache and needs_writeback:
 		Signals.all_new_transaction_started.emit()
 		var writeback_address = caches[cpu_id].tag[set_no] * 2 + set_no
 		Signals.write_transaction_started_to_ram.emit(cpu_id, writeback_address, caches[cpu_id].data[set_no])
@@ -138,30 +189,7 @@ func _snoop_read(cpu_id: int, mem_address: int) -> void:
 		await _read_from_ram(cpu_id, mem_address, state)
 
 
-func write_requested(cpu_id: int, mem_address: int) -> void:
-	var e = Event.new()
-	e.is_read = false
-	e.cpu_id = cpu_id
-	e.address = mem_address
-	event_queue.append(e)
-	if event_queue.size() == 1 and not handling_event:
-		_handle_event()
-
-
-func _handle_event():
-	handling_event = true
-	var event = event_queue[0]
-	if event.is_read:
-		await handle_read(event.cpu_id, event.address)
-	else:
-		await try_local(event.cpu_id, event.address)
-	event_queue.remove_at(0)
-	handling_event = false
-	if not event_queue.is_empty():
-		_handle_event()
-
-
-func try_local(cpu_id: int, mem_address: int) -> void:
+func _handle_write(cpu_id: int, mem_address: int) -> void:
 	var tag = mem_address >> 1
 	var set_no = mem_address % 2
 
