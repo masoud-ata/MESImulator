@@ -4,7 +4,6 @@ extends Node
 signal animation_speed_factor_changed(factor: float)
 
 signal user_reset_requested
-signal processor_reset_requested
 
 signal user_read_requested(cpu_id: int, memory_address: int)
 signal user_write_requested(cpu_id: int, memory_address: int)

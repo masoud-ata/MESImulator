@@ -19,12 +19,6 @@ func _ready() -> void:
 		line.pivot_offset = line.size / 2
 
 
-func reset() -> void:
-	clear_colors()
-	for line in mem_lines:
-		line.get_child(0).get_child(1).text = "0"
-
-
 func clear_colors() -> void:
 	for line in mem_lines:
 		line.get_child(0).get_child(0).set("theme_override_colors/font_color", Color.WHITE)

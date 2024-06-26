@@ -34,6 +34,7 @@ const DEFAULT_ANIMATION_TIME = 0.5
 	$Buses/Cache1AddressOut,
 	$Buses/Cache2AddressOut,
 ]
+
 @onready var ram_address_in_bus: CanvasGroup = $Buses/RamAddressIn
 @onready var ram_address_out_bus: CanvasGroup = $Buses/RamAddressOut
 @onready var ram_data_in_bus: CanvasGroup = $Buses/RamDataIn
@@ -44,7 +45,6 @@ const DEFAULT_ANIMATION_TIME = 0.5
 
 
 func _ready() -> void:
-	Signals.processor_reset_requested.connect(_reset)
 	Signals.animation_speed_factor_changed.connect(_adjust_animation_speed)
 	Signals.all_new_transaction_started.connect(_clear_visuals)
 	Signals.cache_state_updated.connect(_cache_state_updated)
@@ -60,13 +60,6 @@ func _ready() -> void:
 
 func _adjust_animation_speed(factor: float) -> void:
 	animation_time = DEFAULT_ANIMATION_TIME * factor
-
-
-func _reset() -> void:
-	_clear_visuals()
-	for cpu in cpus:
-		cpu.reset()
-		ram_ui.reset()
 
 
 func _clear_bus_visuals() -> void:

@@ -65,13 +65,6 @@ func _ready() -> void:
 	_init_contents()
 
 
-func reset() -> void:
-	for set_no in range(2):
-		cache_value[set_no].text = str(0)
-		cache_tag[set_no].text = ""
-		cache_state[set_no].text = "I"
-
-
 func _adjust_animation_speed(factor: float) -> void:
 	if is_equal_approx(factor, 0.0):
 		animation_time = DEFAULT_ANIMATION_TIME * factor

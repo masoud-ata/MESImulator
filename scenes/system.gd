@@ -29,26 +29,6 @@ var ram: Array[int] = [0, 0, 0, 0]
 func _ready() -> void:
 	Signals.user_read_requested.connect(_user_read_requested)
 	Signals.user_write_requested.connect(_user_write_requested)
-	Signals.user_reset_requested.connect(_schedule_reset)
-
-
-func _schedule_reset() -> void:
-	if event_queue.is_empty():
-		_reset()
-	else:
-		event_queue.append(null)
-
-
-func _reset() -> void:
-	Signals.processor_reset_requested.emit()
-	ram = [0, 0, 0, 0]
-	for cache_id in caches:
-		caches[cache_id].tag[0] = 0
-		caches[cache_id].tag[1] = 0
-		caches[cache_id].data[0] = 0
-		caches[cache_id].data[1] = 0
-		caches[cache_id].status[0] = MesiStates.I
-		caches[cache_id].status[1] = MesiStates.I
 
 
 func _user_read_requested(cpu_id: int, mem_address: int) -> void:
@@ -85,11 +65,7 @@ func _handle_events():
 	event_queue.remove_at(0)
 	handling_event = false
 	if not event_queue.is_empty():
-		if event_queue[event_queue.size() - 1] == null:
-			event_queue.clear()
-			_reset()
-		else:
-			_handle_events()
+		_handle_events()
 
 
 func _handle_read(cpu_id: int, mem_address: int) -> void:
@@ -100,24 +76,28 @@ func _handle_read(cpu_id: int, mem_address: int) -> void:
 	var needs_writeback = caches[cpu_id].status[set_no] == MesiStates.M
 
 	if not block_is_in_cache and needs_writeback:
-		Signals.all_new_transaction_started.emit()
-		var writeback_address = caches[cpu_id].tag[set_no] * 2 + set_no
-		Signals.write_transaction_started_to_ram.emit(cpu_id, writeback_address, caches[cpu_id].data[set_no])
-		await Signals.transaction_finished
-		ram[writeback_address] = caches[cpu_id].data[set_no]
+		await _writeback_block_to_ram(cpu_id, set_no)
 
 	if (block_is_in_cache and block_is_invalid) or not block_is_in_cache:
-		Signals.all_new_transaction_started.emit()
 		await _snoop_read(cpu_id, mem_address)
 	elif block_is_in_cache and not block_is_invalid:
-		Signals.all_new_transaction_started.emit()
 		await _read_from_cache(cpu_id, set_no, tag)
 	else:
 		assert(false, "Should not happen!")
 
 
+func _writeback_block_to_ram(cpu_id: int, set_no: int) -> void:
+	Signals.all_new_transaction_started.emit()
+	var writeback_address = caches[cpu_id].tag[set_no] * 2 + set_no
+	Signals.write_transaction_started_to_ram.emit(cpu_id, writeback_address, caches[cpu_id].data[set_no])
+	await Signals.transaction_finished
+	ram[writeback_address] = caches[cpu_id].data[set_no]
+
+
 func _read_from_cache(cpu_id: int, set_no: int, tag: int) -> void:
-	Signals.read_transaction_performed_in_cache.emit(cpu_id, set_no, tag, state_names[caches[cpu_id].status[set_no]])
+	Signals.all_new_transaction_started.emit()
+	var state = state_names[caches[cpu_id].status[set_no]]
+	Signals.read_transaction_performed_in_cache.emit(cpu_id, set_no, tag, state)
 	await Signals.transaction_finished
 
 
@@ -145,6 +125,8 @@ func _snoop_read(cpu_id: int, mem_address: int) -> void:
 
 	var handled = false
 	var is_sahred_in_another_cache = false
+
+	Signals.all_new_transaction_started.emit()
 	for other_cache_id in caches.keys():
 		var block_is_in_another_cache = cpu_id != other_cache_id and caches[other_cache_id].tag[set_no] == tag
 		if block_is_in_another_cache and caches[other_cache_id].status[set_no] == MesiStates.S:
