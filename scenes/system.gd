@@ -33,10 +33,11 @@ func _handle_read(cpu_id: int, mem_address: int) -> void:
 	if not block_is_in_cache and needs_writeback:
 		await _writeback_block_to_ram(cpu_id, set_no)
 
+	Signals.all_new_transaction_started.emit()
+
 	if (block_is_in_cache and block_is_invalid) or not block_is_in_cache:
 		await _snoop_read(cpu_id, mem_address)
 	elif block_is_in_cache and not block_is_invalid:
-		Signals.all_new_transaction_started.emit()
 		_read_in_cache(cpu_id, set_no, tag)
 	else:
 		assert(false, "Should not happen!")
@@ -51,8 +52,9 @@ func _handle_write(cpu_id: int, mem_address: int) -> void:
 	var block_is_exclusive = caches[cpu_id].status[set_no] == MesiStates.E
 	var block_is_modified = caches[cpu_id].status[set_no] == MesiStates.M
 
+	Signals.all_new_transaction_started.emit()
+
 	if block_is_in_cache and (block_is_exclusive or block_is_modified):
-		Signals.all_new_transaction_started.emit()
 		var new_data = caches[cpu_id].data[set_no] + 1
 		_write_in_cache(cpu_id, set_no, tag, new_data, MesiStates.M)
 	else:
@@ -110,23 +112,18 @@ func _snoop_read(cpu_id: int, mem_address: int) -> void:
 	var tag = mem_address >> 1
 	var set_no = mem_address % 2
 	var block_is_in_another_cache = false
+	var is_not_exclusive_or_modified_in_another_cache = true
 	var is_shared_in_another_cache = false
-	var is_invalid_in_another_cache = false
-
-	Signals.all_new_transaction_started.emit()
 
 	for other_cache_id in caches.keys():
 		block_is_in_another_cache = cpu_id != other_cache_id and caches[other_cache_id].tag[set_no] == tag
-		var block_in_other_is_invalid = caches[other_cache_id].status[set_no] == MesiStates.I
-		var block_in_other_is_sahred = caches[other_cache_id].status[set_no] == MesiStates.S
+		is_shared_in_another_cache = block_is_in_another_cache and \
+			caches[other_cache_id].status[set_no] == MesiStates.S
 		var block_in_other_is_exclusive = caches[other_cache_id].status[set_no] == MesiStates.E
 		var block_in_other_is_modified = caches[other_cache_id].status[set_no] == MesiStates.M
 
-		if block_is_in_another_cache and block_in_other_is_invalid:
-			is_invalid_in_another_cache = true
-		elif block_is_in_another_cache and block_in_other_is_sahred:
-			is_shared_in_another_cache = true
-		elif block_is_in_another_cache and block_in_other_is_exclusive:
+		if block_is_in_another_cache and block_in_other_is_exclusive:
+			is_not_exclusive_or_modified_in_another_cache = false
 			await _place_address_on_buses(cpu_id, mem_address)
 			_update_cache_state(other_cache_id, set_no, tag, MesiStates.S)
 			await _read_data_from_ram(cpu_id, mem_address)
@@ -134,6 +131,7 @@ func _snoop_read(cpu_id: int, mem_address: int) -> void:
 			_read_in_cache(cpu_id, set_no, tag)
 			break
 		elif block_is_in_another_cache and block_in_other_is_modified:
+			is_not_exclusive_or_modified_in_another_cache = false
 			var other_cache_data = caches[other_cache_id].data[set_no]
 			await _place_address_on_buses(cpu_id, mem_address)
 			await _read_from_other_cache(other_cache_id, cpu_id, set_no, tag)
@@ -142,7 +140,7 @@ func _snoop_read(cpu_id: int, mem_address: int) -> void:
 			ram[mem_address] = other_cache_data
 			break
 
-	if not block_is_in_another_cache or is_shared_in_another_cache or is_invalid_in_another_cache:
+	if not block_is_in_another_cache or is_not_exclusive_or_modified_in_another_cache:
 		await _place_address_on_buses(cpu_id, mem_address)
 		await _read_data_from_ram(cpu_id, mem_address)
 		var state = MesiStates.S if is_shared_in_another_cache else MesiStates.E
@@ -157,8 +155,6 @@ func _snoop_write(cpu_id: int, mem_address: int) -> void:
 	var block_is_in_cache = caches[cpu_id].tag[set_no] == tag
 	var block_is_exclusive_or_modified = caches[cpu_id].status[set_no] == MesiStates.E or \
 		caches[cpu_id].status[set_no] == MesiStates.M
-
-	Signals.all_new_transaction_started.emit()
 
 	if block_is_in_cache and block_is_exclusive_or_modified:
 		caches[cpu_id].tag[set_no] = tag
