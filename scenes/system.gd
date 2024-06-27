@@ -181,7 +181,7 @@ func _snoop_write(cpu_id: int, mem_address: int) -> void:
 			await _read_from_other_cache(writeback_cpu_id, cpu_id, set_no, tag)
 			var other_cache_data = caches[writeback_cpu_id].data[set_no]
 			_update_cache_state(writeback_cpu_id, set_no, tag, MesiStates.I)
-			_write_in_cache(cpu_id, set_no, tag, caches[cpu_id].data[set_no] + 1, MesiStates.M)
+			_write_in_cache(cpu_id, set_no, tag, other_cache_data + 1, MesiStates.M)
 			ram[mem_address] = other_cache_data
 		else:
 			await _place_address_on_buses(cpu_id, mem_address)
