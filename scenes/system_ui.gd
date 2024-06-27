@@ -50,7 +50,7 @@ func _ready() -> void:
 	Signals.cache_state_updated.connect(_cache_state_updated)
 	Signals.write_transaction_performed_in_cache.connect(_write_transaction_performed_in_cache)
 	Signals.read_transaction_performed_in_cache.connect(_read_transaction_performed_in_cache)
-	Signals.read_transaction_started_on_bus.connect(_read_transaction_started_on_bus)
+	Signals.address_placed_on_buses.connect(_address_placed_on_buses)
 	Signals.read_transaction_started_from_ram.connect(_read_transaction_started_from_ram)
 	Signals.read_transaction_started_from_other_cache.connect(_read_transaction_started_from_other_cache)
 	Signals.write_transaction_started_to_ram.connect(_write_transaction_started_to_ram)
@@ -102,7 +102,7 @@ func _read_transaction_performed_in_cache(cpu_id: int, set_no: int, tag: int, st
 	cpus[cpu_id].animate_cache_content(set_no)
 
 
-func _read_transaction_started_on_bus(cpu_id: int, _mem_address: int) -> void:
+func _address_placed_on_buses(cpu_id: int, _mem_address: int) -> void:
 	var tween = create_tween()
 	tween.tween_property(cache_address_out_buses[cpu_id], "self_modulate", Color.SKY_BLUE, animation_time)
 	tween.tween_property(address_bus, "self_modulate", Color.SKY_BLUE, animation_time)
