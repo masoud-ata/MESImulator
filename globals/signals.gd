@@ -7,6 +7,9 @@ signal user_reset_requested
 
 signal user_read_requested(cpu_id: int, memory_address: int)
 signal user_write_requested(cpu_id: int, memory_address: int)
+signal cpu_read_issued(cpu_id: int, memory_address: int)
+signal cpu_write_issued(cpu_id: int, memory_address: int)
+signal cpu_read_or_write_handled
 
 signal write_transaction_performed_in_cache(cpu_id: int, set_no: int, tag: int, data: int)
 signal read_transaction_performed_in_cache(cpu_id: int, set_no: int, tag: int, state: String)

@@ -15,57 +15,12 @@ var caches = {
 	2: Cache.new()
 }
 
-class Event:
-	var is_read: bool
-	var cpu_id: int
-	var address: int
-
-var event_queue: Array[Event] = []
-var handling_event := false
-
 var ram: Array[int] = [0, 0, 0, 0]
 
 
 func _ready() -> void:
-	Signals.user_read_requested.connect(_user_read_requested)
-	Signals.user_write_requested.connect(_user_write_requested)
-
-
-func _user_read_requested(cpu_id: int, mem_address: int) -> void:
-	var e = _create_event(cpu_id, mem_address, true)
-	_add_event(e)
-
-
-func _user_write_requested(cpu_id: int, mem_address: int) -> void:
-	var e = _create_event(cpu_id, mem_address, false)
-	_add_event(e)
-
-
-func _create_event(cpu_id: int, mem_address: int, is_read: bool) -> Event:
-	var e = Event.new()
-	e.is_read = is_read
-	e.cpu_id = cpu_id
-	e.address = mem_address
-	return e
-
-
-func _add_event(event: Event) -> void:
-	event_queue.append(event)
-	if event_queue.size() == 1 and not handling_event:
-		_handle_events()
-
-
-func _handle_events():
-	handling_event = true
-	var event = event_queue[0]
-	if event.is_read:
-		await _handle_read(event.cpu_id, event.address)
-	else:
-		await _handle_write(event.cpu_id, event.address)
-	event_queue.remove_at(0)
-	handling_event = false
-	if not event_queue.is_empty():
-		_handle_events()
+	Signals.cpu_read_issued.connect(_handle_read)
+	Signals.cpu_write_issued.connect(_handle_write)
 
 
 func _handle_read(cpu_id: int, mem_address: int) -> void:
@@ -84,6 +39,29 @@ func _handle_read(cpu_id: int, mem_address: int) -> void:
 		await _read_from_cache(cpu_id, set_no, tag)
 	else:
 		assert(false, "Should not happen!")
+
+	Signals.cpu_read_or_write_handled.emit()
+
+
+func _handle_write(cpu_id: int, mem_address: int) -> void:
+	var tag = mem_address >> 1
+	var set_no = mem_address % 2
+
+	if caches[cpu_id].tag[set_no] == tag and \
+		(caches[cpu_id].status[set_no] == MesiStates.M or \
+		caches[cpu_id].status[set_no] == MesiStates.E):
+		Signals.all_new_transaction_started.emit()
+		caches[cpu_id].data[set_no] += 1
+		caches[cpu_id].status[set_no] = MesiStates.M
+		caches[cpu_id].tag[set_no] = tag
+		Signals.cache_state_updated.emit(cpu_id, set_no, tag, state_names[MesiStates.M])
+		Signals.write_transaction_performed_in_cache.emit(cpu_id, set_no, tag, caches[cpu_id].data[set_no])
+		await Signals.transaction_finished
+	else:
+		Signals.all_new_transaction_started.emit()
+		await snoop_write(cpu_id, mem_address)
+
+	Signals.cpu_read_or_write_handled.emit()
 
 
 func _writeback_block_to_ram(cpu_id: int, set_no: int) -> void:
@@ -169,25 +147,6 @@ func _snoop_read(cpu_id: int, mem_address: int) -> void:
 		await Signals.transaction_finished
 		var state = MesiStates.S if is_sahred_in_another_cache else MesiStates.E
 		await _read_from_ram(cpu_id, mem_address, state)
-
-
-func _handle_write(cpu_id: int, mem_address: int) -> void:
-	var tag = mem_address >> 1
-	var set_no = mem_address % 2
-
-	if caches[cpu_id].tag[set_no] == tag and \
-		(caches[cpu_id].status[set_no] == MesiStates.M or \
-		caches[cpu_id].status[set_no] == MesiStates.E):
-		Signals.all_new_transaction_started.emit()
-		caches[cpu_id].data[set_no] += 1
-		caches[cpu_id].status[set_no] = MesiStates.M
-		caches[cpu_id].tag[set_no] = tag
-		Signals.cache_state_updated.emit(cpu_id, set_no, tag, state_names[MesiStates.M])
-		Signals.write_transaction_performed_in_cache.emit(cpu_id, set_no, tag, caches[cpu_id].data[set_no])
-		await Signals.transaction_finished
-	else:
-		Signals.all_new_transaction_started.emit()
-		await snoop_write(cpu_id, mem_address)
 
 
 func snoop_write(cpu_id: int, mem_address: int) -> void:

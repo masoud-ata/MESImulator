@@ -65,13 +65,6 @@ func _ready() -> void:
 	_init_contents()
 
 
-func _adjust_animation_speed(factor: float) -> void:
-	if is_equal_approx(factor, 0.0):
-		animation_time = DEFAULT_ANIMATION_TIME * factor
-	else:
-		animation_time = DEFAULT_ANIMATION_TIME
-
-
 func _on_read_a_0_pressed() -> void:
 	Signals.user_read_requested.emit(id, 0)
 	_animate_button(read_a_0)
@@ -117,6 +110,13 @@ func _init_contents() -> void:
 		val.text = "0"
 	for state in cache_state:
 		state.text = "I"
+
+
+func _adjust_animation_speed(factor: float) -> void:
+	if is_equal_approx(factor, 0.0):
+		animation_time = DEFAULT_ANIMATION_TIME * factor
+	else:
+		animation_time = DEFAULT_ANIMATION_TIME
 
 
 func _animate_button(button: Button) -> void:
