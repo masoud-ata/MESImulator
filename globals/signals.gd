@@ -14,7 +14,6 @@ signal cpu_read_or_write_handled
 signal write_transaction_performed_in_cache(cpu_id: int, set_no: int, tag: int, data: int)
 signal read_transaction_performed_in_cache(cpu_id: int, set_no: int, tag: int, state: String)
 
-signal snoop_transaction_started_on_bus(cpu_id: int, mem_address: int)
 signal read_transaction_started_on_bus(cpu_id: int, mem_address: int)
 signal read_transaction_started_from_ram(cpu_id: int, mem_address: int)
 signal read_transaction_started_from_other_cache(other_cpu_id: int, cpu_id: int, mem_address: int, data: int)

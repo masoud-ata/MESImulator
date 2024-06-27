@@ -51,7 +51,6 @@ func _ready() -> void:
 	Signals.write_transaction_performed_in_cache.connect(_write_transaction_performed_in_cache)
 	Signals.read_transaction_performed_in_cache.connect(_read_transaction_performed_in_cache)
 	Signals.read_transaction_started_on_bus.connect(_read_transaction_started_on_bus)
-	Signals.snoop_transaction_started_on_bus.connect(_snoop_transaction_started_on_bus)
 	Signals.read_transaction_started_from_ram.connect(_read_transaction_started_from_ram)
 	Signals.read_transaction_started_from_other_cache.connect(_read_transaction_started_from_other_cache)
 	Signals.write_transaction_started_to_ram.connect(_write_transaction_started_to_ram)
@@ -92,8 +91,7 @@ func _write_transaction_performed_in_cache(cpu_id: int, set_no: int, tag: int, d
 	cpus[cpu_id].cache_tag[set_no].set("theme_override_colors/font_color", Color.TOMATO)
 	cpus[cpu_id].cache_state[set_no].set("theme_override_colors/font_color", Color.TOMATO)
 	cpus[cpu_id].update_cache_content(set_no, tag, data)
-	await cpus[cpu_id].animate_cache_content(set_no)
-	Signals.transaction_finished.emit()
+	cpus[cpu_id].animate_cache_content(set_no)
 
 
 func _read_transaction_performed_in_cache(cpu_id: int, set_no: int, tag: int, state: String) -> void:
@@ -101,8 +99,7 @@ func _read_transaction_performed_in_cache(cpu_id: int, set_no: int, tag: int, st
 	cpus[cpu_id].cache_tag[set_no].set("theme_override_colors/font_color", Color.YELLOW_GREEN)
 	cpus[cpu_id].cache_state[set_no].set("theme_override_colors/font_color", Color.YELLOW_GREEN)
 	cpus[cpu_id].update_cache_state(set_no, tag, state)
-	await cpus[cpu_id].animate_cache_content(set_no)
-	Signals.transaction_finished.emit()
+	cpus[cpu_id].animate_cache_content(set_no)
 
 
 func _read_transaction_started_on_bus(cpu_id: int, _mem_address: int) -> void:
@@ -110,19 +107,6 @@ func _read_transaction_started_on_bus(cpu_id: int, _mem_address: int) -> void:
 	tween.tween_property(cache_address_out_buses[cpu_id], "self_modulate", Color.SKY_BLUE, animation_time)
 	tween.tween_property(address_bus, "self_modulate", Color.SKY_BLUE, animation_time)
 	tween.tween_property(ram_address_in_bus, "self_modulate", Color.SKY_BLUE, animation_time)
-	var other_address_in_buses = cache_address_in_buses.duplicate()
-	other_address_in_buses.remove_at(cpu_id)
-	for b in other_address_in_buses:
-		tween.parallel().tween_property(b, "self_modulate", Color.SKY_BLUE, animation_time)
-	await tween.finished
-	Signals.transaction_finished.emit()
-
-
-func _snoop_transaction_started_on_bus(cpu_id: int, _mem_address: int) -> void:
-	var tween = create_tween()
-	tween.tween_property(cache_address_out_buses[cpu_id], "self_modulate", Color.SKY_BLUE, animation_time)
-	tween.tween_property(address_bus, "self_modulate", Color.SKY_BLUE, animation_time)
-	#tween.tween_property(ram_address_in_bus, "self_modulate", Color.SKY_BLUE, animation_time)
 	var other_address_in_buses = cache_address_in_buses.duplicate()
 	other_address_in_buses.remove_at(cpu_id)
 	for b in other_address_in_buses:

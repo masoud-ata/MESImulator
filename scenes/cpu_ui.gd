@@ -141,5 +141,3 @@ func animate_cache_content(set_no: int) -> void:
 	tween.tween_property(cache_line[set_no], "scale", animation_scale_factor, DEFAULT_ANIMATION_TIME)
 	tween.tween_property(cache_line[set_no], "scale", Vector2.ONE, DEFAULT_ANIMATION_TIME)\
 	.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
-	await tween.finished
-	await get_tree().create_timer(animation_time).timeout

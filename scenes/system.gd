@@ -36,7 +36,7 @@ func _handle_read(cpu_id: int, mem_address: int) -> void:
 	if (block_is_in_cache and block_is_invalid) or not block_is_in_cache:
 		await _snoop_read(cpu_id, mem_address)
 	elif block_is_in_cache and not block_is_invalid:
-		await _read_from_cache(cpu_id, set_no, tag)
+		_read_in_cache(cpu_id, set_no, tag)
 	else:
 		assert(false, "Should not happen!")
 
@@ -46,20 +46,14 @@ func _handle_read(cpu_id: int, mem_address: int) -> void:
 func _handle_write(cpu_id: int, mem_address: int) -> void:
 	var tag = mem_address >> 1
 	var set_no = mem_address % 2
+	var block_is_in_cache = caches[cpu_id].tag[set_no] == tag
+	var block_is_exclusive = caches[cpu_id].status[set_no] == MesiStates.E
+	var block_is_modified = caches[cpu_id].status[set_no] == MesiStates.M
 
-	if caches[cpu_id].tag[set_no] == tag and \
-		(caches[cpu_id].status[set_no] == MesiStates.M or \
-		caches[cpu_id].status[set_no] == MesiStates.E):
-		Signals.all_new_transaction_started.emit()
-		caches[cpu_id].data[set_no] += 1
-		caches[cpu_id].status[set_no] = MesiStates.M
-		caches[cpu_id].tag[set_no] = tag
-		Signals.cache_state_updated.emit(cpu_id, set_no, tag, state_names[MesiStates.M])
-		Signals.write_transaction_performed_in_cache.emit(cpu_id, set_no, tag, caches[cpu_id].data[set_no])
-		await Signals.transaction_finished
+	if block_is_in_cache and (block_is_exclusive or block_is_modified):
+		await _write_in_cache(cpu_id, set_no, tag)
 	else:
-		Signals.all_new_transaction_started.emit()
-		await snoop_write(cpu_id, mem_address)
+		await _snoop_write(cpu_id, mem_address)
 
 	Signals.cpu_read_or_write_handled.emit()
 
@@ -72,11 +66,19 @@ func _writeback_block_to_ram(cpu_id: int, set_no: int) -> void:
 	ram[writeback_address] = caches[cpu_id].data[set_no]
 
 
-func _read_from_cache(cpu_id: int, set_no: int, tag: int) -> void:
+func _write_in_cache(cpu_id: int, set_no: int, tag: int) -> void:
+	Signals.all_new_transaction_started.emit()
+	caches[cpu_id].data[set_no] += 1
+	caches[cpu_id].status[set_no] = MesiStates.M
+	caches[cpu_id].tag[set_no] = tag
+	Signals.cache_state_updated.emit(cpu_id, set_no, tag, state_names[MesiStates.M])
+	Signals.write_transaction_performed_in_cache.emit(cpu_id, set_no, tag, caches[cpu_id].data[set_no])
+
+
+func _read_in_cache(cpu_id: int, set_no: int, tag: int) -> void:
 	Signals.all_new_transaction_started.emit()
 	var state = state_names[caches[cpu_id].status[set_no]]
 	Signals.read_transaction_performed_in_cache.emit(cpu_id, set_no, tag, state)
-	await Signals.transaction_finished
 
 
 func _read_from_ram(cpu_id: int, mem_address: int, state: MesiStates) -> void:
@@ -91,10 +93,8 @@ func _read_from_ram(cpu_id: int, mem_address: int, state: MesiStates) -> void:
 	caches[cpu_id].tag[set_no] = tag
 	Signals.cache_state_updated.emit(cpu_id, set_no, tag, state_names[state])
 	Signals.write_transaction_performed_in_cache.emit(cpu_id, set_no, tag, ram_data)
-	await Signals.transaction_finished
 	if state != MesiStates.M:
 		Signals.read_transaction_performed_in_cache.emit(cpu_id, set_no, tag, state_names[state])
-		await Signals.transaction_finished
 
 
 func _snoop_read(cpu_id: int, mem_address: int) -> void:
@@ -125,7 +125,6 @@ func _snoop_read(cpu_id: int, mem_address: int) -> void:
 			caches[other_cache_id].status[set_no] = MesiStates.S
 			Signals.cache_state_updated.emit(other_cache_id, set_no, tag, state_names[MesiStates.S])
 			Signals.read_transaction_performed_in_cache.emit(other_cache_id, set_no, tag, state_names[MesiStates.S])
-			await Signals.transaction_finished
 			var other_cache_data = caches[other_cache_id].data[set_no]
 			Signals.read_transaction_started_from_other_cache.emit(other_cache_id, cpu_id, mem_address, other_cache_data)
 			await Signals.transaction_finished
@@ -135,9 +134,7 @@ func _snoop_read(cpu_id: int, mem_address: int) -> void:
 			ram[mem_address] = other_cache_data
 			Signals.cache_state_updated.emit(cpu_id, set_no, tag, state_names[MesiStates.S])
 			Signals.write_transaction_performed_in_cache.emit(cpu_id, set_no, tag, other_cache_data)
-			await Signals.transaction_finished
 			Signals.read_transaction_performed_in_cache.emit(cpu_id, set_no, tag, state_names[MesiStates.S])
-			await Signals.transaction_finished
 			handled = true
 			break
 
@@ -149,7 +146,7 @@ func _snoop_read(cpu_id: int, mem_address: int) -> void:
 		await _read_from_ram(cpu_id, mem_address, state)
 
 
-func snoop_write(cpu_id: int, mem_address: int) -> void:
+func _snoop_write(cpu_id: int, mem_address: int) -> void:
 	var tag = mem_address >> 1
 	var set_no = mem_address % 2
 
@@ -157,13 +154,14 @@ func snoop_write(cpu_id: int, mem_address: int) -> void:
 	var block_is_exclusive_or_modified = caches[cpu_id].status[set_no] == MesiStates.E or \
 		caches[cpu_id].status[set_no] == MesiStates.M
 
+	Signals.all_new_transaction_started.emit()
+
 	if block_is_in_cache and block_is_exclusive_or_modified:
 		caches[cpu_id].tag[set_no] = tag
 		caches[cpu_id].data[set_no] += 1
 		caches[cpu_id].status[set_no] = MesiStates.M
 		Signals.cache_state_updated.emit(cpu_id, set_no, tag, state_names[MesiStates.M])
 		Signals.write_transaction_performed_in_cache.emit(cpu_id, set_no, tag, caches[cpu_id].data[set_no])
-		await Signals.transaction_finished
 
 	elif block_is_in_cache and caches[cpu_id].status[set_no] == MesiStates.S:
 		var caches_to_be_invalidated = []
@@ -185,7 +183,6 @@ func snoop_write(cpu_id: int, mem_address: int) -> void:
 		caches[cpu_id].status[set_no] = MesiStates.M
 		Signals.cache_state_updated.emit(cpu_id, set_no, tag, state_names[MesiStates.M])
 		Signals.write_transaction_performed_in_cache.emit(cpu_id, set_no, tag, caches[cpu_id].data[set_no])
-		await Signals.transaction_finished
 	elif block_is_in_cache and caches[cpu_id].status[set_no] == MesiStates.I or not block_is_in_cache:
 		var writeback_in_this_cache_needed = caches[cpu_id].status[set_no] == MesiStates.M
 		var caches_to_be_invalidated = []
@@ -215,7 +212,6 @@ func snoop_write(cpu_id: int, mem_address: int) -> void:
 			caches[writeback_id].status[set_no] = MesiStates.S
 			Signals.cache_state_updated.emit(writeback_id, set_no, tag, state_names[MesiStates.S])
 			Signals.read_transaction_performed_in_cache.emit(writeback_id, set_no, tag, state_names[MesiStates.S])
-			await Signals.transaction_finished
 			var other_cache_data = caches[writeback_id].data[set_no]
 			Signals.read_transaction_started_from_other_cache.emit(writeback_id, cpu_id, mem_address, other_cache_data)
 			await Signals.transaction_finished
@@ -225,14 +221,12 @@ func snoop_write(cpu_id: int, mem_address: int) -> void:
 			ram[mem_address] = other_cache_data
 			Signals.cache_state_updated.emit(cpu_id, set_no, tag, state_names[MesiStates.S])
 			Signals.write_transaction_performed_in_cache.emit(cpu_id, set_no, tag, other_cache_data)
-			await Signals.transaction_finished
 			caches[writeback_id].status[set_no] = MesiStates.I
 			Signals.cache_state_updated.emit(writeback_id, set_no, tag, state_names[MesiStates.I])
 			caches[cpu_id].data[set_no] += 1
 			caches[cpu_id].status[set_no] = MesiStates.M
 			Signals.cache_state_updated.emit(cpu_id, set_no, tag, state_names[MesiStates.M])
 			Signals.write_transaction_performed_in_cache.emit(cpu_id, set_no, tag, caches[cpu_id].data[set_no])
-			await Signals.transaction_finished
 		else:
 			Signals.read_transaction_started_on_bus.emit(cpu_id, mem_address)
 			await Signals.transaction_finished
@@ -245,4 +239,3 @@ func snoop_write(cpu_id: int, mem_address: int) -> void:
 			caches[cpu_id].status[set_no] = MesiStates.M
 			Signals.cache_state_updated.emit(cpu_id, set_no, tag, state_names[MesiStates.M])
 			Signals.write_transaction_performed_in_cache.emit(cpu_id, set_no, tag, caches[cpu_id].data[set_no])
-			await Signals.transaction_finished
