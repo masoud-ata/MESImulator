@@ -47,14 +47,14 @@ const DEFAULT_ANIMATION_TIME = 0.1
 func _ready() -> void:
 	Signals.animation_speed_factor_changed.connect(_adjust_animation_speed)
 
-	read_a_0.pressed.connect(_on_read_a_0_pressed)
-	read_a_1.pressed.connect(_on_read_a_1_pressed)
-	read_a_2.pressed.connect(_on_read_a_2_pressed)
-	read_a_3.pressed.connect(_on_read_a_3_pressed)
-	write_a_0.pressed.connect(_on_write_a_0_pressed)
-	write_a_1.pressed.connect(_on_write_a_1_pressed)
-	write_a_2.pressed.connect(_on_write_a_2_pressed)
-	write_a_3.pressed.connect(_on_write_a_3_pressed)
+	read_a_0.pressed.connect(_send_read_request.bind(read_a_0, 0))
+	read_a_1.pressed.connect(_send_read_request.bind(read_a_1, 1))
+	read_a_2.pressed.connect(_send_read_request.bind(read_a_2, 2))
+	read_a_3.pressed.connect(_send_read_request.bind(read_a_3, 3))
+	write_a_0.pressed.connect(_send_write_request.bind(write_a_0, 0))
+	write_a_1.pressed.connect(_send_write_request.bind(write_a_1, 1))
+	write_a_2.pressed.connect(_send_write_request.bind(write_a_2, 2))
+	write_a_3.pressed.connect(_send_write_request.bind(write_a_3, 3))
 
 	for button in all_buttons:
 		button.pivot_offset = button.size / 2
@@ -65,44 +65,14 @@ func _ready() -> void:
 	_init_contents()
 
 
-func _on_read_a_0_pressed() -> void:
-	Signals.user_read_requested.emit(id, 0)
-	_animate_button(read_a_0)
+func _send_read_request(button: Button, address: int):
+	Signals.user_read_requested.emit(id, address)
+	_animate_button(button)
 
 
-func _on_read_a_1_pressed() -> void:
-	Signals.user_read_requested.emit(id, 1)
-	_animate_button(read_a_1)
-
-
-func _on_read_a_2_pressed() -> void:
-	Signals.user_read_requested.emit(id, 2)
-	_animate_button(read_a_2)
-
-
-func _on_read_a_3_pressed() -> void:
-	Signals.user_read_requested.emit(id, 3)
-	_animate_button(read_a_3)
-
-
-func _on_write_a_0_pressed() -> void:
-	Signals.user_write_requested.emit(id, 0)
-	_animate_button(write_a_0)
-
-
-func _on_write_a_1_pressed() -> void:
-	Signals.user_write_requested.emit(id, 1)
-	_animate_button(write_a_1)
-
-
-func _on_write_a_2_pressed() -> void:
-	Signals.user_write_requested.emit(id, 2)
-	_animate_button(write_a_2)
-
-
-func _on_write_a_3_pressed() -> void:
-	Signals.user_write_requested.emit(id, 3)
-	_animate_button(write_a_3)
+func _send_write_request(button: Button, address: int):
+	Signals.user_write_requested.emit(id, address)
+	_animate_button(button)
 
 
 func _init_contents() -> void:
