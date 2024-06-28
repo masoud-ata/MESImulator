@@ -196,9 +196,9 @@ func _invalidate_other_caches(cpu_id: int, set_no: int, tag: int) -> void:
 		if cpu_id != c:
 			var block_is_in_another_cache = caches[c].tag[set_no] == tag
 			var other_is_shared = caches[c].status[set_no] == MesiStates.S
-			if block_is_in_another_cache and other_is_shared:
-				caches[c].status[set_no] = MesiStates.I
-				Signals.cache_state_updated.emit(c, set_no, tag, state_names[MesiStates.I])
+			var other_is_exclusive = caches[c].status[set_no] == MesiStates.E
+			if block_is_in_another_cache and (other_is_shared or other_is_exclusive):
+				_update_cache_state(c, set_no, tag, MesiStates.I)
 
 
 func writeback_in_other_needed(cpu_id: int, set_no: int, tag: int) -> Array:
