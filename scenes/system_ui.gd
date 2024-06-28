@@ -43,6 +43,10 @@ const DEFAULT_ANIMATION_TIME = 0.5
 @onready var data_bus: CanvasGroup = $Buses/DataBus
 @onready var address_bus: CanvasGroup = $Buses/AddressBus
 
+@onready var background_space_1: Sprite2D = $BackgroundSpace1
+@onready var background_space_2: Sprite2D = $BackgroundSpace2
+@onready var falling_star: AnimatedSprite2D = $FallingStar
+
 
 func _ready() -> void:
 	Signals.animation_speed_factor_changed.connect(_adjust_animation_speed)
@@ -54,7 +58,12 @@ func _ready() -> void:
 	Signals.read_transaction_started_from_ram.connect(_read_transaction_started_from_ram)
 	Signals.read_transaction_started_from_other_cache.connect(_read_transaction_started_from_other_cache)
 	Signals.write_transaction_started_to_ram.connect(_write_transaction_started_to_ram)
+
 	_clear_bus_visuals()
+
+	var show_me = randi() & 1
+	background_space_1.visible = show_me
+	background_space_2.visible = not show_me
 
 
 func _adjust_animation_speed(factor: float) -> void:
@@ -154,3 +163,7 @@ func _read_transaction_started_from_other_cache(other_cpu_id: int, cpu_id: int, 
 func _cache_state_updated(cpu_id: int, set_no: int, tag: int, state: String) -> void:
 	cpus[cpu_id].update_cache_state(set_no, tag, state)
 	await cpus[cpu_id].animate_cache_content(set_no)
+
+
+func _on_star_timer_timeout() -> void:
+	falling_star.play("default")

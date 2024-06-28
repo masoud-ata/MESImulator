@@ -1,13 +1,103 @@
-[gd_scene load_steps=6 format=3 uid="uid://biw35awrn2a6w"]
+[gd_scene load_steps=17 format=3 uid="uid://biw35awrn2a6w"]
 
 [ext_resource type="PackedScene" uid="uid://bco8y64xv5o0" path="res://scenes/cpu_ui.tscn" id="1_f3ao2"]
 [ext_resource type="Script" path="res://scenes/system_ui.gd" id="1_lx7g6"]
+[ext_resource type="Texture2D" uid="uid://c3rq71qgbglmf" path="res://assets/background.png" id="2_ol2r7"]
 [ext_resource type="PackedScene" uid="uid://dhhcghptane4n" path="res://scenes/ram_ui.tscn" id="2_pve52"]
-[ext_resource type="Texture2D" uid="uid://b6c1l7vx6u4hj" path="res://assets/colored_tilemap.png" id="4_6x3pj"]
+[ext_resource type="Texture2D" uid="uid://hbdowft7hpav" path="res://assets/background2.png" id="3_g2kka"]
+[ext_resource type="Texture2D" uid="uid://cd1km0wnv2yn5" path="res://assets/falling_star.png" id="4_d70sq"]
+[ext_resource type="Texture2D" uid="uid://b6c1l7vx6u4hj" path="res://assets/tilemap1.png" id="4_qjgjy"]
 [ext_resource type="PackedScene" uid="uid://cal5d4vh1082r" path="res://scenes/settings.tscn" id="5_ufjsy"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p3g7c"]
+atlas = ExtResource("4_d70sq")
+region = Rect2(0, 0, 62, 85)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ig5j7"]
+atlas = ExtResource("4_d70sq")
+region = Rect2(62, 0, 62, 85)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a4kmw"]
+atlas = ExtResource("4_d70sq")
+region = Rect2(124, 0, 62, 85)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sq4jx"]
+atlas = ExtResource("4_d70sq")
+region = Rect2(186, 0, 62, 85)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7kek2"]
+atlas = ExtResource("4_d70sq")
+region = Rect2(248, 0, 62, 85)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p1roj"]
+atlas = ExtResource("4_d70sq")
+region = Rect2(310, 0, 62, 85)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rgh2l"]
+atlas = ExtResource("4_d70sq")
+region = Rect2(372, 0, 62, 85)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_aof44"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": null
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p3g7c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ig5j7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a4kmw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sq4jx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7kek2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p1roj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rgh2l")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"default",
+"speed": 10.0
+}]
 
 [node name="SystemUI" type="Node2D"]
 script = ExtResource("1_lx7g6")
+
+[node name="BackgroundSpace1" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(397, 248)
+scale = Vector2(0.808594, 0.863333)
+texture = ExtResource("2_ol2r7")
+
+[node name="BackgroundSpace2" type="Sprite2D" parent="."]
+self_modulate = Color(1, 1, 1, 0.713726)
+position = Vector2(404, 255.5)
+scale = Vector2(1.3, 1.50278)
+texture = ExtResource("3_g2kka")
+
+[node name="FallingStar" type="AnimatedSprite2D" parent="."]
+position = Vector2(524, 52)
+scale = Vector2(2.7, 2.7)
+sprite_frames = SubResource("SpriteFrames_aof44")
+autoplay = "default"
+frame = 6
+frame_progress = 1.0
+
+[node name="StarTimer" type="Timer" parent="."]
+wait_time = 25.0
+autostart = true
 
 [node name="CPU0" parent="." instance=ExtResource("1_f3ao2")]
 position = Vector2(65, 266)
@@ -32,21 +122,21 @@ position = Vector2(-91, -4)
 [node name="Arrowhead" type="Sprite2D" parent="Buses/DataBus"]
 position = Vector2(831, 237)
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
 [node name="Conduit" type="Sprite2D" parent="Buses/DataBus"]
 position = Vector2(479.5, 237)
 scale = Vector2(85.875, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
 [node name="Arrowhead2" type="Sprite2D" parent="Buses/DataBus"]
 position = Vector2(135, 237)
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 flip_h = true
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
@@ -57,21 +147,21 @@ position = Vector2(-90, -37)
 [node name="Arrowhead" type="Sprite2D" parent="Buses/AddressBus"]
 position = Vector2(831, 237)
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
 [node name="Conduit" type="Sprite2D" parent="Buses/AddressBus"]
 position = Vector2(479.5, 237)
 scale = Vector2(85.875, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
 [node name="Arrowhead2" type="Sprite2D" parent="Buses/AddressBus"]
 position = Vector2(135, 237)
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 flip_h = true
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
@@ -83,7 +173,7 @@ position = Vector2(152, 263)
 position = Vector2(0, -17)
 rotation = -1.5708
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
@@ -91,7 +181,7 @@ region_rect = Rect2(27, 63, 8, 8)
 position = Vector2(-9.69701e-06, 3.32126)
 rotation = -1.5708
 scale = Vector2(3.71243, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
@@ -103,7 +193,7 @@ rotation = -3.14159
 position = Vector2(0, -14)
 rotation = -1.5708
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
@@ -111,7 +201,7 @@ region_rect = Rect2(27, 63, 8, 8)
 position = Vector2(1.65333e-05, 10.5672)
 rotation = -1.5708
 scale = Vector2(4.18454, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
@@ -123,7 +213,7 @@ rotation = -3.14159
 position = Vector2(0, -29)
 rotation = -1.5708
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
@@ -131,7 +221,7 @@ region_rect = Rect2(27, 63, 8, 8)
 position = Vector2(4.83758e-06, 10.3364)
 rotation = -1.5708
 scale = Vector2(7.81333, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
@@ -142,7 +232,7 @@ position = Vector2(106, 244)
 position = Vector2(0, -31)
 rotation = -1.5708
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
@@ -150,7 +240,7 @@ region_rect = Rect2(27, 63, 8, 8)
 position = Vector2(-6.94611e-06, 7.08118)
 rotation = -1.5708
 scale = Vector2(7.95894, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
@@ -161,7 +251,7 @@ position = Vector2(410, 263)
 position = Vector2(0, -17)
 rotation = -1.5708
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
@@ -169,7 +259,7 @@ region_rect = Rect2(27, 63, 8, 8)
 position = Vector2(-7.79672e-06, 3.8462)
 rotation = -1.5708
 scale = Vector2(3.58119, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
@@ -181,7 +271,7 @@ rotation = 3.14159
 position = Vector2(0, -14)
 rotation = -1.5708
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
@@ -189,7 +279,7 @@ region_rect = Rect2(27, 63, 8, 8)
 position = Vector2(1.65333e-05, 10.5672)
 rotation = -1.5708
 scale = Vector2(4.18455, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
@@ -201,7 +291,7 @@ rotation = -3.14159
 position = Vector2(0, -29)
 rotation = -1.5708
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
@@ -209,7 +299,7 @@ region_rect = Rect2(27, 63, 8, 8)
 position = Vector2(1.20939e-05, 12.3409)
 rotation = -1.5708
 scale = Vector2(8.31446, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
@@ -220,7 +310,7 @@ position = Vector2(366, 244)
 position = Vector2(0, -31)
 rotation = -1.5708
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
@@ -228,7 +318,7 @@ region_rect = Rect2(27, 63, 8, 8)
 position = Vector2(-5.58702e-06, 7.45662)
 rotation = -1.5708
 scale = Vector2(7.86508, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
@@ -239,7 +329,7 @@ position = Vector2(669, 263)
 position = Vector2(0, -17)
 rotation = -1.5708
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
@@ -247,7 +337,7 @@ region_rect = Rect2(27, 63, 8, 8)
 position = Vector2(-6.85674e-06, 4.10587)
 rotation = -1.5708
 scale = Vector2(3.51627, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
@@ -259,7 +349,7 @@ rotation = 3.14159
 position = Vector2(0, -14)
 rotation = -1.5708
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
@@ -267,7 +357,7 @@ region_rect = Rect2(27, 63, 8, 8)
 position = Vector2(1.58025e-05, 10.3653)
 rotation = -1.5708
 scale = Vector2(4.13408, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
@@ -279,7 +369,7 @@ rotation = -3.14159
 position = Vector2(0, -29)
 rotation = -1.5708
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
@@ -287,7 +377,7 @@ region_rect = Rect2(27, 63, 8, 8)
 position = Vector2(1.06661e-05, 11.9465)
 rotation = -1.5708
 scale = Vector2(8.21585, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
@@ -298,7 +388,7 @@ position = Vector2(623, 242)
 position = Vector2(0, -29)
 rotation = -1.5708
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
@@ -306,7 +396,7 @@ region_rect = Rect2(27, 63, 8, 8)
 position = Vector2(-6.77626e-21, 9)
 rotation = -1.5708
 scale = Vector2(7.47924, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
@@ -317,7 +407,7 @@ position = Vector2(410, 205)
 position = Vector2(0, -26)
 rotation = -1.5708
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
@@ -325,7 +415,7 @@ region_rect = Rect2(27, 63, 8, 8)
 position = Vector2(1.14929e-05, 3.02565)
 rotation = -1.5708
 scale = Vector2(5.41133, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
@@ -337,7 +427,7 @@ rotation = 3.14159
 position = Vector2(2.51318e-05, -14)
 rotation = -1.5708
 scale = Vector2(2.21875, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
@@ -345,7 +435,7 @@ region_rect = Rect2(27, 63, 8, 8)
 position = Vector2(3.35499e-07, 13.6753)
 rotation = -1.5708
 scale = Vector2(4.96157, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
@@ -356,7 +446,7 @@ position = Vector2(356, 172)
 position = Vector2(0, 4)
 rotation = -1.5708
 scale = Vector2(2, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
@@ -364,7 +454,7 @@ region_rect = Rect2(27, 63, 8, 8)
 position = Vector2(1.52205e-05, 16.7158)
 rotation = -1.5708
 scale = Vector2(2.4263, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
@@ -376,7 +466,7 @@ rotation = 3.14159
 position = Vector2(2.3593e-05, -14)
 rotation = -1.5708
 scale = Vector2(2.28125, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
@@ -384,9 +474,11 @@ region_rect = Rect2(27, 63, 8, 8)
 position = Vector2(5.90827e-06, -2.01102)
 rotation = -1.5708
 scale = Vector2(1.03998, 2)
-texture = ExtResource("4_6x3pj")
+texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
 
 [node name="Settings" parent="." instance=ExtResource("5_ufjsy")]
 position = Vector2(664, 23)
+
+[connection signal="timeout" from="StarTimer" to="." method="_on_star_timer_timeout"]
