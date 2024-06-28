@@ -75,13 +75,21 @@ animations = [{
 [node name="SystemUI" type="Node2D"]
 script = ExtResource("1_lx7g6")
 
-[node name="BackgroundSpace1" type="Sprite2D" parent="."]
+[node name="BackgroundPlain" type="ColorRect" parent="."]
 visible = false
+modulate = Color(0.129412, 0.129412, 0.168627, 1)
+offset_left = -39.0
+offset_top = -22.0
+offset_right = 834.0
+offset_bottom = 525.0
+
+[node name="BackgroundSpace1" type="Sprite2D" parent="."]
 position = Vector2(397, 248)
 scale = Vector2(0.808594, 0.863333)
 texture = ExtResource("2_ol2r7")
 
 [node name="BackgroundSpace2" type="Sprite2D" parent="."]
+visible = false
 self_modulate = Color(1, 1, 1, 0.713726)
 position = Vector2(404, 255.5)
 scale = Vector2(1.3, 1.50278)
@@ -91,8 +99,7 @@ texture = ExtResource("3_g2kka")
 position = Vector2(524, 52)
 scale = Vector2(2.7, 2.7)
 sprite_frames = SubResource("SpriteFrames_aof44")
-autoplay = "default"
-frame = 6
+frame = 8
 frame_progress = 1.0
 
 [node name="StarTimer" type="Timer" parent="."]

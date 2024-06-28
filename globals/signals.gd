@@ -2,6 +2,7 @@ extends Node
 
 
 signal animation_speed_factor_changed(factor: float)
+signal background_visibility_toggled(toggled_on: bool)
 
 signal user_reset_requested
 

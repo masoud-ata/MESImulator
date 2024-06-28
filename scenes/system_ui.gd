@@ -43,6 +43,7 @@ const DEFAULT_ANIMATION_TIME = 0.5
 @onready var data_bus: CanvasGroup = $Buses/DataBus
 @onready var address_bus: CanvasGroup = $Buses/AddressBus
 
+@onready var background_plain: ColorRect = $BackgroundPlain
 @onready var background_space_1: Sprite2D = $BackgroundSpace1
 @onready var background_space_2: Sprite2D = $BackgroundSpace2
 @onready var falling_star: AnimatedSprite2D = $FallingStar
@@ -50,6 +51,7 @@ const DEFAULT_ANIMATION_TIME = 0.5
 
 func _ready() -> void:
 	Signals.animation_speed_factor_changed.connect(_adjust_animation_speed)
+	Signals.background_visibility_toggled.connect(_background_visibility_toggled)
 	Signals.all_new_transaction_started.connect(_clear_visuals)
 	Signals.cache_state_updated.connect(_cache_state_updated)
 	Signals.write_transaction_performed_in_cache.connect(_write_transaction_performed_in_cache)
@@ -68,6 +70,20 @@ func _ready() -> void:
 
 func _adjust_animation_speed(factor: float) -> void:
 	animation_time = DEFAULT_ANIMATION_TIME * factor
+
+
+func _background_visibility_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		background_plain.visible = false
+		var show_me = randi() & 1
+		background_space_1.visible = show_me
+		background_space_2.visible = not show_me
+		falling_star.visible = true
+	else:
+		background_plain.visible = true
+		background_space_1.visible = false
+		background_space_2.visible = false
+		falling_star.visible = false
 
 
 func _clear_bus_visuals() -> void:
