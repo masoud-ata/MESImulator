@@ -1,8 +1,7 @@
 # MESImulator
 A visual simulator for the MESI cache coherency protocol in Godot 4
 
-![](images/mesimulator2.png)
-![](images/mesimulator.png)
+![](images/mesimulator_animation.png)
 
 
 <sup><sub>
