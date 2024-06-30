@@ -18,6 +18,21 @@ func _ready() -> void:
 	for line in mem_lines:
 		line.pivot_offset = line.size / 2
 
+	animate_intro.call_deferred()
+
+
+func animate_intro() -> void:
+	var animate = func(ui):
+		var start_position = ui.global_position - Vector2(0, 50)
+		var end_position = ui.global_position
+		var tween = create_tween()
+		tween.tween_property(ui, "global_position", start_position, 0.01)
+		tween.tween_property(ui, "global_position", end_position, randf_range(0.2, 0.75))\
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BOUNCE)
+
+	for line in mem_lines:
+		animate.call(line)
+
 
 func clear_colors() -> void:
 	for line in mem_lines:

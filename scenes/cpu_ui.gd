@@ -18,7 +18,7 @@ const DEFAULT_ANIMATION_TIME = 0.1
 @onready var write_a_2: Button = %WriteA2
 @onready var write_a_3: Button = %WriteA3
 
-@onready var all_buttons = [
+@onready var all_buttons: Array[Button] = [
 	read_a_0, read_a_1, read_a_2, read_a_3,
 	write_a_0, write_a_1, write_a_2, write_a_3,
 ]
@@ -64,6 +64,23 @@ func _ready() -> void:
 
 	_init_contents()
 
+	animate_intro.call_deferred()
+
+
+func animate_intro() -> void:
+	var animate = func(ui):
+		var start_position = ui.global_position - Vector2(0, 50)
+		var end_position = ui.global_position
+		var tween = create_tween()
+		tween.tween_property(ui, "global_position", start_position, 0.01)
+		tween.tween_property(ui, "global_position", end_position, randf_range(0.2, 0.75))\
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BOUNCE)
+
+	for button in all_buttons:
+		animate.call(button)
+	for line in cache_line:
+		animate.call(line)
+
 
 func _send_read_request(button: Button, address: int):
 	Signals.user_read_requested.emit(id, address)
@@ -90,10 +107,11 @@ func _adjust_animation_speed(factor: float) -> void:
 
 
 func _animate_button(button: Button) -> void:
+	const DEFAULT_ANIMATION_HALF_TIME = DEFAULT_ANIMATION_TIME / 2
 	var tween = create_tween()
-	tween.tween_property(button, "scale", animation_scale_factor, DEFAULT_ANIMATION_TIME / 2)
-	tween.tween_property(button, "scale", Vector2.ONE, DEFAULT_ANIMATION_TIME / 2)\
-	.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	tween.tween_property(button, "scale", animation_scale_factor, DEFAULT_ANIMATION_HALF_TIME)
+	tween.tween_property(button, "scale", Vector2.ONE, DEFAULT_ANIMATION_HALF_TIME)\
+	.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BOUNCE)
 
 
 func update_cache_content(set_no: int, tag: int, value: int) -> void:
@@ -110,4 +128,4 @@ func animate_cache_content(set_no: int) -> void:
 	var tween = create_tween()
 	tween.tween_property(cache_line[set_no], "scale", animation_scale_factor, DEFAULT_ANIMATION_TIME)
 	tween.tween_property(cache_line[set_no], "scale", Vector2.ONE, DEFAULT_ANIMATION_TIME)\
-	.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BOUNCE)
