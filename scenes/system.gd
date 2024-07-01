@@ -100,7 +100,7 @@ func _read_data_from_ram(cpu_id: int, mem_address: int) -> void:
 
 func _read_from_other_cache(other_cpu_id: int, cpu_id: int, set_no: int, tag: int) -> void:
 	var data = caches[other_cpu_id].data[set_no]
-	var mem_address = set_no * 2 + tag
+	var mem_address = tag * 2 + set_no
 
 	_update_cache_state(other_cpu_id, set_no, tag, MesiStates.S)
 	_read_in_cache(other_cpu_id, set_no, tag)
@@ -116,9 +116,9 @@ func _snoop_read(cpu_id: int, mem_address: int) -> void:
 	var is_not_exclusive_or_modified_in_another_cache = true
 	var is_shared_in_another_cache = false
 
-	for other_cache_id in caches.keys():
+	for other_cache_id in _get_other_cache_ids(cpu_id):
 		var block_is_not_in_other_cache = caches[other_cache_id].tag[set_no] != tag
-		if cpu_id == other_cache_id or block_is_not_in_other_cache:
+		if block_is_not_in_other_cache:
 			continue
 
 		block_was_not_found_in_others = false
@@ -168,7 +168,7 @@ func _snoop_write(cpu_id: int, mem_address: int) -> void:
 		_write_in_cache(cpu_id, set_no, tag, new_data, MesiStates.M)
 	elif (block_is_in_cache and block_is_invalid) or not block_is_in_cache:
 		var writeback_in_this_cache_needed = caches[cpu_id].status[set_no] == MesiStates.M
-		var wb = writeback_in_other_needed(cpu_id, set_no, tag)
+		var wb = _get_caches_that_need_writeback(cpu_id, set_no, tag)
 		var writeback_in_another_cache_needed = wb[0]
 		var writeback_cpu_id = wb[1]
 
@@ -201,16 +201,21 @@ func _invalidate_other_caches(cpu_id: int, set_no: int, tag: int) -> void:
 				_update_cache_state(c, set_no, tag, MesiStates.I)
 
 
-func writeback_in_other_needed(cpu_id: int, set_no: int, tag: int) -> Array:
+func _get_caches_that_need_writeback(cpu_id: int, set_no: int, tag: int) -> Array:
 	var writeback_in_another_cache_needed = false
 	var writeback_cpu_id = 0
 
-	for c in caches.keys():
-		if cpu_id != c:
-			var block_is_in_another_cache = caches[c].tag[set_no] == tag
-			if block_is_in_another_cache and caches[c].status[set_no] == MesiStates.M :
-				writeback_in_another_cache_needed = true
-				writeback_cpu_id = c
-				break
+	for other_cache_id in _get_other_cache_ids(cpu_id):
+		var block_is_in_another_cache = caches[other_cache_id].tag[set_no] == tag
+		if block_is_in_another_cache and caches[other_cache_id].status[set_no] == MesiStates.M :
+			writeback_in_another_cache_needed = true
+			writeback_cpu_id = other_cache_id
+			break
 
 	return [writeback_in_another_cache_needed, writeback_cpu_id]
+
+
+func _get_other_cache_ids(current_id: int) -> Array:
+	var other_ids = caches.keys()
+	other_ids.erase(current_id)
+	return other_ids
