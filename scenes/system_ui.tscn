@@ -109,7 +109,7 @@ wait_time = 25.0
 autostart = true
 
 [node name="Settings" parent="." instance=ExtResource("5_ufjsy")]
-position = Vector2(664, 23)
+position = Vector2(664, 13)
 
 [node name="CPU0" parent="." instance=ExtResource("1_f3ao2")]
 position = Vector2(65, 266)

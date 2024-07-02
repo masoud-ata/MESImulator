@@ -58,6 +58,12 @@ layout_mode = 2
 size_flags_horizontal = 0
 button_pressed = true
 
+[node name="FunButton" type="Button" parent="PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Fun!"
+icon_alignment = 1
+
 [node name="ResetButton" type="Button" parent="PanelContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2

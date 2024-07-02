@@ -1,0 +1,76 @@
+[gd_scene load_steps=17 format=3 uid="uid://bm8vgnvxmi7do"]
+
+[ext_resource type="Script" path="res://scenes/fun/fun.gd" id="1_31a2s"]
+[ext_resource type="Texture2D" uid="uid://6s53jhf881m" path="res://assets/fun/bomb_guy/1.png" id="31_kfc1p"]
+[ext_resource type="Texture2D" uid="uid://cl01o81qlmdgh" path="res://assets/fun/bomb_guy/2.png" id="32_pjeig"]
+[ext_resource type="Texture2D" uid="uid://mtydvrwchujb" path="res://assets/fun/bomb_guy/3.png" id="33_0fs2y"]
+[ext_resource type="Texture2D" uid="uid://ds2qoy0egdnq" path="res://assets/fun/bomb_guy/4.png" id="34_b64gv"]
+[ext_resource type="Texture2D" uid="uid://lkof1l5l7k2v" path="res://assets/fun/bomb_guy/5.png" id="35_amhw6"]
+[ext_resource type="Texture2D" uid="uid://dtihjk1fjpygh" path="res://assets/fun/bomb_guy/6.png" id="36_o5que"]
+[ext_resource type="Texture2D" uid="uid://bpyh5p2anfskk" path="res://assets/fun/bomb_guy/7.png" id="37_kdb7o"]
+[ext_resource type="Texture2D" uid="uid://c7oivr1gb4unm" path="res://assets/fun/bomb_guy/8.png" id="38_2nxvm"]
+[ext_resource type="Texture2D" uid="uid://6cu24ej6iop0" path="res://assets/fun/bomb_guy/9.png" id="39_hcwbw"]
+[ext_resource type="Texture2D" uid="uid://do4outinvmkbw" path="res://assets/fun/bomb_guy/10.png" id="40_v6srb"]
+[ext_resource type="Texture2D" uid="uid://b0fxipbr6i02n" path="res://assets/fun/bomb_guy/11.png" id="41_60py4"]
+[ext_resource type="Texture2D" uid="uid://bgmg776vfdgr5" path="res://assets/fun/bomb_guy/12.png" id="42_syfx8"]
+[ext_resource type="Texture2D" uid="uid://b7oe6osok46a7" path="res://assets/fun/bomb_guy/13.png" id="43_0ah4f"]
+[ext_resource type="Texture2D" uid="uid://ci0jl24q2krl7" path="res://assets/fun/bomb_guy/14.png" id="44_5l6xm"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ukn4g"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("31_kfc1p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_pjeig")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_0fs2y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_b64gv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_amhw6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_o5que")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_kdb7o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_2nxvm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_hcwbw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_v6srb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_60py4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_syfx8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_0ah4f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_5l6xm")
+}],
+"loop": true,
+"name": &"run",
+"speed": 30.0
+}]
+
+[node name="Fun" type="Node2D"]
+script = ExtResource("1_31a2s")
+
+[node name="BombGuy" type="AnimatedSprite2D" parent="."]
+position = Vector2(-88.5, 469)
+sprite_frames = SubResource("SpriteFrames_ukn4g")
+animation = &"run"
+frame_progress = 0.586533

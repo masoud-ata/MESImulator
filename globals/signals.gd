@@ -4,6 +4,7 @@ extends Node
 signal animation_speed_factor_changed(factor: float)
 signal background_visibility_toggled(toggled_on: bool)
 
+signal user_fun_requested
 signal user_reset_requested
 
 signal user_read_requested(cpu_id: int, memory_address: int)

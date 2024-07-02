@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bif3p823awsbl"]
+[gd_scene load_steps=5 format=3 uid="uid://bif3p823awsbl"]
 
 [ext_resource type="Script" path="res://scenes/program.gd" id="1_if5sl"]
 [ext_resource type="PackedScene" uid="uid://biw35awrn2a6w" path="res://scenes/system_ui.tscn" id="1_t83a6"]
 [ext_resource type="PackedScene" uid="uid://b2ggqjrf7b6jm" path="res://scenes/system.tscn" id="2_d8ena"]
+[ext_resource type="PackedScene" uid="uid://bm8vgnvxmi7do" path="res://scenes/fun/fun.tscn" id="4_4avoq"]
 
 [node name="Program" type="Node2D"]
 script = ExtResource("1_if5sl")
@@ -10,3 +11,5 @@ script = ExtResource("1_if5sl")
 [node name="System" parent="." instance=ExtResource("2_d8ena")]
 
 [node name="SystemUI" parent="." instance=ExtResource("1_t83a6")]
+
+[node name="Fun" parent="." instance=ExtResource("4_4avoq")]

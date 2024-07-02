@@ -1,8 +1,9 @@
 extends Node2D
 
 
-var system_scene = preload("res://scenes/system.tscn")
-var system_ui_scene = preload("res://scenes/system_ui.tscn")
+const SystemScene = preload("res://scenes/system.tscn")
+const SystemUIScene = preload("res://scenes/system_ui.tscn")
+const Fun = preload("res://scenes/fun/fun.tscn")
 
 
 func _ready() -> void:
@@ -10,12 +11,16 @@ func _ready() -> void:
 
 
 func _reset():
-	var system_node = get_node("System")
-	remove_child(system_node)
-	system_node.queue_free()
-	var system_ui_node = get_node("SystemUI")
-	remove_child(system_ui_node)
-	system_ui_node.queue_free()
+	_free_node("System")
+	_free_node("SystemUI")
+	_free_node("Fun")
 
-	add_child(system_scene.instantiate())
-	add_child(system_ui_scene.instantiate())
+	add_child(SystemScene.instantiate())
+	add_child(SystemUIScene.instantiate())
+	add_child(Fun.instantiate())
+
+
+func _free_node(node_name: String) -> void:
+	var node = get_node(node_name)
+	remove_child(node)
+	node.queue_free()
