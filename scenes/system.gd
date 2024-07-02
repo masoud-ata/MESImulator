@@ -2,7 +2,6 @@ extends Node
 
 
 enum MesiStates { I, E, S, M }
-var state_names = ["I", "E", "S", "M"]
 
 class Cache:
 	var tag: Array[int] = [0, 0]
@@ -80,11 +79,11 @@ func _write_in_cache(cpu_id: int, set_no: int, tag: int, data: int, state: MesiS
 func _update_cache_state(cpu_id: int, set_no: int, tag: int, state: MesiStates) -> void:
 	caches[cpu_id].status[set_no] = state
 	caches[cpu_id].tag[set_no] = tag
-	Signals.cache_state_updated.emit(cpu_id, set_no, tag, state_names[state])
+	Signals.cache_state_updated.emit(cpu_id, set_no, tag, MesiStates.keys()[state])
 
 
 func _read_in_cache(cpu_id: int, set_no: int, tag: int) -> void:
-	var state = state_names[caches[cpu_id].status[set_no]]
+	var state = MesiStates.keys()[caches[cpu_id].status[set_no]]
 	Signals.read_transaction_performed_in_cache.emit(cpu_id, set_no, tag, state)
 
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://biw35awrn2a6w"]
+[gd_scene load_steps=18 format=3 uid="uid://biw35awrn2a6w"]
 
 [ext_resource type="PackedScene" uid="uid://bco8y64xv5o0" path="res://scenes/cpu_ui.tscn" id="1_f3ao2"]
 [ext_resource type="Script" path="res://scenes/system_ui.gd" id="1_lx7g6"]
@@ -72,6 +72,8 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pnh4g"]
+
 [node name="SystemUI" type="Node2D"]
 script = ExtResource("1_lx7g6")
 
@@ -105,6 +107,9 @@ frame_progress = 1.0
 [node name="StarTimer" type="Timer" parent="."]
 wait_time = 25.0
 autostart = true
+
+[node name="Settings" parent="." instance=ExtResource("5_ufjsy")]
+position = Vector2(664, 23)
 
 [node name="CPU0" parent="." instance=ExtResource("1_f3ao2")]
 position = Vector2(65, 266)
@@ -148,6 +153,14 @@ flip_h = true
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
+[node name="BusNameLabel" type="Label" parent="Buses/DataBus"]
+offset_left = 141.0
+offset_top = 218.0
+offset_right = 185.0
+offset_bottom = 238.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_pnh4g")
+text = "Data"
+
 [node name="AddressBus" type="CanvasGroup" parent="Buses"]
 position = Vector2(-90, -37)
 
@@ -172,6 +185,14 @@ texture = ExtResource("4_qjgjy")
 flip_h = true
 region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
+
+[node name="BusNameLabel" type="Label" parent="Buses/AddressBus"]
+offset_left = 141.0
+offset_top = 218.0
+offset_right = 185.0
+offset_bottom = 238.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_pnh4g")
+text = "Address"
 
 [node name="Cache0DataOut" type="CanvasGroup" parent="Buses"]
 position = Vector2(152, 263)
@@ -484,8 +505,5 @@ scale = Vector2(1.03998, 2)
 texture = ExtResource("4_qjgjy")
 region_enabled = true
 region_rect = Rect2(9, 65, 8, 4)
-
-[node name="Settings" parent="." instance=ExtResource("5_ufjsy")]
-position = Vector2(664, 23)
 
 [connection signal="timeout" from="StarTimer" to="." method="_on_star_timer_timeout"]
