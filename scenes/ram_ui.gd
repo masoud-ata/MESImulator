@@ -15,15 +15,26 @@ const DEFAULT_ANIMATION_TIME = 0.1
 
 
 func _ready() -> void:
+	Signals.fun_explosion_happened.connect(_animate_shake)
+
 	for line in mem_lines:
 		line.pivot_offset = line.size / 2
 
-	animate_intro.call_deferred()
+	_animate_intro.call_deferred()
 
 
-func animate_intro() -> void:
-	var animate = func(ui):
-		var start_position = ui.global_position - Vector2(0, 50)
+func _animate_intro() -> void:
+	var displacement = Vector2(0, -50)
+	_animate_all(displacement, false)
+
+
+func _animate_shake() -> void:
+	_animate_all(Vector2.ZERO, true)
+
+
+func _animate_all(displacement: Vector2, random: bool) -> void:
+	var animate = func(ui, offset):
+		var start_position = ui.global_position + offset
 		var end_position = ui.global_position
 		var tween = create_tween()
 		tween.tween_property(ui, "global_position", start_position, 0.01)
@@ -31,7 +42,9 @@ func animate_intro() -> void:
 		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BOUNCE)
 
 	for line in mem_lines:
-		animate.call(line)
+		if random:
+			displacement = Vector2(randf_range(-20, 20), randf_range(-20, 20))
+		animate.call(line, displacement)
 
 
 func clear_colors() -> void:

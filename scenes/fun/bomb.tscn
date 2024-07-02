@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://dmpxewuq6c15f"]
+[gd_scene load_steps=25 format=3 uid="uid://dmpxewuq6c15f"]
 
 [ext_resource type="Script" path="res://scenes/fun/bomb.gd" id="1_66lxo"]
 [ext_resource type="Texture2D" uid="uid://gxmnobbgohao" path="res://assets/fun/bomb/1.png" id="2_en3em"]
@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://0f56a23bu6l0" path="res://assets/fun/explosion/7.png" id="18_jsums"]
 [ext_resource type="Texture2D" uid="uid://2an5ft0exdcx" path="res://assets/fun/explosion/8.png" id="19_mox1w"]
 [ext_resource type="Texture2D" uid="uid://bb6nyuxd5kpw7" path="res://assets/fun/explosion/9.png" id="20_5afdt"]
+[ext_resource type="AudioStream" uid="uid://c0phdjud1uvph" path="res://assets/fun/explosion.ogg" id="21_oxr47"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_qheip"]
 animations = [{
@@ -123,5 +124,9 @@ frame_progress = 1.0
 [node name="Collider" type="CollisionShape2D" parent="."]
 position = Vector2(0, -12)
 shape = SubResource("CircleShape2D_h7mw8")
+
+[node name="ExplosionAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("21_oxr47")
+volume_db = -15.0
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

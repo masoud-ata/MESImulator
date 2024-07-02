@@ -3,6 +3,7 @@ extends Node2D
 
 @onready var bomb: AnimatedSprite2D = $Bomb
 @onready var explosion: AnimatedSprite2D = $Explosion
+@onready var explosion_audio: AudioStreamPlayer = $ExplosionAudio
 
 
 func _ready() -> void:
@@ -25,6 +26,8 @@ func _activate() -> void:
 func _explode() -> void:
 	bomb.visible = false
 	explosion.play("default")
+	explosion_audio.play()
+	Signals.fun_explosion_happened.emit()
 	await explosion.animation_finished
 	queue_free()
 
