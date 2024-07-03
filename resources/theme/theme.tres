@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=10 format=3 uid="uid://64ety4iufu0f"]
+[gd_resource type="Theme" load_steps=18 format=3 uid="uid://64ety4iufu0f"]
 
 [ext_resource type="Texture2D" uid="uid://dyblgjqtmjgh1" path="res://assets/ui.png" id="1_8m35k"]
 [ext_resource type="FontFile" uid="uid://bhj7prl38bply" path="res://resources/theme/Rockboxcond12.ttf" id="1_s1yqk"]
@@ -28,6 +28,26 @@ texture_margin_top = 3.0
 texture_margin_right = 3.0
 texture_margin_bottom = 3.0
 region_rect = Rect2(36, 4, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xe62d"]
+atlas = ExtResource("1_8m35k")
+region = Rect2(0, 36, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qe4gf"]
+atlas = ExtResource("1_8m35k")
+region = Rect2(32, 16, 16, 16)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_idscm"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o8edx"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f48jy"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h86oo"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d5q8k"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t6oy4"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p8mnv"]
 texture = ExtResource("1_8m35k")
@@ -64,6 +84,14 @@ Button/styles/focus = SubResource("StyleBoxEmpty_22nx0")
 Button/styles/hover = SubResource("StyleBoxTexture_wwtbp")
 Button/styles/normal = SubResource("StyleBoxTexture_p5rah")
 Button/styles/pressed = SubResource("StyleBoxTexture_isg83")
+CheckBox/icons/checked = SubResource("AtlasTexture_xe62d")
+CheckBox/icons/unchecked = SubResource("AtlasTexture_qe4gf")
+CheckBox/styles/disabled = SubResource("StyleBoxEmpty_idscm")
+CheckBox/styles/focus = SubResource("StyleBoxEmpty_o8edx")
+CheckBox/styles/hover = SubResource("StyleBoxEmpty_f48jy")
+CheckBox/styles/hover_pressed = SubResource("StyleBoxEmpty_h86oo")
+CheckBox/styles/normal = SubResource("StyleBoxEmpty_d5q8k")
+CheckBox/styles/pressed = SubResource("StyleBoxEmpty_t6oy4")
 Label/styles/normal = SubResource("StyleBoxTexture_p8mnv")
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_rc2dc")
 StoragePanelContainer/base_type = &"PanelContainer"
