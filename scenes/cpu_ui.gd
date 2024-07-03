@@ -43,6 +43,8 @@ const DEFAULT_ANIMATION_TIME = 0.1
 	$CPUCacheUI/PanelContainer/VBoxContainer/PanelContainer2,
 ]
 
+@onready var audio_stream_player: AudioStreamPlayer = $AudioStreamPlayer
+
 
 func _ready() -> void:
 	Signals.fun_explosion_happened.connect(_animate_shake)
@@ -99,11 +101,13 @@ func _animate_all(displacement: Vector2, random: bool) -> void:
 func _send_read_request(button: Button, address: int):
 	Signals.user_read_requested.emit(id, address)
 	_animate_button(button)
+	audio_stream_player.play()
 
 
 func _send_write_request(button: Button, address: int):
 	Signals.user_write_requested.emit(id, address)
 	_animate_button(button)
+	audio_stream_player.play()
 
 
 func _init_contents() -> void:
