@@ -17,6 +17,9 @@ var caches = {
 var ram: Array[int] = [0, 0, 0, 0]
 
 
+@onready var cache_write_audio: AudioStreamPlayer = $CacheWriteAudio
+
+
 func _ready() -> void:
 	Signals.cpu_read_issued.connect(_handle_read)
 	Signals.cpu_write_issued.connect(_handle_write)
@@ -74,6 +77,8 @@ func _write_in_cache(cpu_id: int, set_no: int, tag: int, data: int, state: MesiS
 	caches[cpu_id].data[set_no] = data
 	_update_cache_state(cpu_id, set_no, tag, state)
 	Signals.write_transaction_performed_in_cache.emit(cpu_id, set_no, tag, caches[cpu_id].data[set_no])
+	cache_write_audio.play()
+
 
 
 func _update_cache_state(cpu_id: int, set_no: int, tag: int, state: MesiStates) -> void:

@@ -71,7 +71,7 @@ func _ready() -> void:
 
 
 func _animate_intro() -> void:
-	var displacement = Vector2(0, -50)
+	var displacement = Vector2(0, -100)
 	_animate_all(displacement, false)
 
 
