@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://hbdowft7hpav" path="res://assets/background2.png" id="3_g2kka"]
 [ext_resource type="Texture2D" uid="uid://cd1km0wnv2yn5" path="res://assets/falling_star.png" id="4_d70sq"]
 [ext_resource type="Texture2D" uid="uid://b6c1l7vx6u4hj" path="res://assets/tilemap1.png" id="4_qjgjy"]
-[ext_resource type="PackedScene" uid="uid://cal5d4vh1082r" path="res://scenes/settings.tscn" id="5_ufjsy"]
+[ext_resource type="PackedScene" uid="uid://cal5d4vh1082r" path="res://scenes/settings_ui.tscn" id="6_2wsm0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p3g7c"]
 atlas = ExtResource("4_d70sq")
@@ -113,7 +113,7 @@ frame_progress = 1.0
 wait_time = 25.0
 autostart = true
 
-[node name="Settings" parent="." instance=ExtResource("5_ufjsy")]
+[node name="Settings" parent="." instance=ExtResource("6_2wsm0")]
 position = Vector2(664, 13)
 
 [node name="CPU0" parent="." instance=ExtResource("1_f3ao2")]

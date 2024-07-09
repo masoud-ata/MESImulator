@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://cal5d4vh1082r"]
 
-[ext_resource type="Script" path="res://scenes/settings.gd" id="1_ntfx8"]
-[ext_resource type="Texture2D" uid="uid://03gnwe2ybnje" path="res://assets/slider.png" id="2_nkoo2"]
+[ext_resource type="Script" path="res://scenes/settings_ui.gd" id="1_huw6g"]
+[ext_resource type="Texture2D" uid="uid://03gnwe2ybnje" path="res://assets/slider.png" id="2_fmpue"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mep80"]
 
@@ -19,8 +19,8 @@ bg_color = Color(1, 0.788235, 0.133333, 1)
 border_color = Color(1, 1, 1, 1)
 corner_detail = 1
 
-[node name="Settings" type="Node2D"]
-script = ExtResource("1_ntfx8")
+[node name="SettingsUI" type="Node2D"]
+script = ExtResource("1_huw6g")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 offset_right = 8.0
@@ -38,25 +38,41 @@ text = "Animation Speed"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-theme_override_icons/grabber = ExtResource("2_nkoo2")
-theme_override_icons/grabber_highlight = ExtResource("2_nkoo2")
-theme_override_icons/grabber_disabled = ExtResource("2_nkoo2")
+theme_override_icons/grabber = ExtResource("2_fmpue")
+theme_override_icons/grabber_highlight = ExtResource("2_fmpue")
+theme_override_icons/grabber_disabled = ExtResource("2_fmpue")
 theme_override_styles/slider = SubResource("StyleBoxLine_pbdku")
 theme_override_styles/grabber_area = SubResource("StyleBoxFlat_i6w0g")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_nn0sg")
 value = 50.0
 metadata/_edit_group_ = true
 
-[node name="BackgroundLabel" type="Label" parent="PanelContainer/VBoxContainer"]
+[node name="BackgroundContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="BackgroundLabel" type="Label" parent="PanelContainer/VBoxContainer/BackgroundContainer"]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_mep80")
 text = "Background"
 
-[node name="BackgroundCheckButton" type="CheckBox" parent="PanelContainer/VBoxContainer"]
+[node name="BackgroundCheckButton" type="CheckBox" parent="PanelContainer/VBoxContainer/BackgroundContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 4
 button_pressed = true
+
+[node name="BugContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="BugLabel" type="Label" parent="PanelContainer/VBoxContainer/BugContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_mep80")
+text = "Bug"
+
+[node name="BugCheckButton" type="CheckBox" parent="PanelContainer/VBoxContainer/BugContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
 
 [node name="FunButton" type="Button" parent="PanelContainer/VBoxContainer"]
 unique_name_in_owner = true

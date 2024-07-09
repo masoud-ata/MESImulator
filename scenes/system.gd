@@ -3,10 +3,12 @@ extends Node
 
 enum MesiStates { I, E, S, M }
 
+
 class Cache:
 	var tag: Array[int] = [0, 0]
 	var data: Array[int] = [0, 0]
 	var status: Array[MesiStates] = [MesiStates.I, MesiStates.I]
+
 
 var caches = {
 	0: Cache.new(),
@@ -16,6 +18,8 @@ var caches = {
 
 var ram: Array[int] = [0, 0, 0, 0]
 
+var _protocal_is_bugged := false
+
 
 @onready var cache_write_audio: AudioStreamPlayer = $CacheWriteAudio
 
@@ -23,6 +27,7 @@ var ram: Array[int] = [0, 0, 0, 0]
 func _ready() -> void:
 	Signals.cpu_read_issued.connect(_handle_read)
 	Signals.cpu_write_issued.connect(_handle_write)
+	Signals.bug_toggled.connect(func(is_bugged: bool): _protocal_is_bugged = is_bugged)
 
 
 func _handle_read(cpu_id: int, mem_address: int) -> void:
@@ -166,7 +171,8 @@ func _snoop_write(cpu_id: int, mem_address: int) -> void:
 
 	if block_is_in_cache and block_is_shared:
 		await _place_address_on_buses(cpu_id, mem_address)
-		_invalidate_other_caches(cpu_id, set_no, tag)
+		if not _protocal_is_bugged:
+			_invalidate_other_caches(cpu_id, set_no, tag)
 		await _read_data_from_ram(cpu_id, mem_address)
 		var new_data = ram[mem_address] + 1
 		_write_in_cache(cpu_id, set_no, tag, new_data, MesiStates.M)
@@ -189,20 +195,20 @@ func _snoop_write(cpu_id: int, mem_address: int) -> void:
 			ram[mem_address] = other_cache_data
 		else:
 			await _place_address_on_buses(cpu_id, mem_address)
-			_invalidate_other_caches(cpu_id, set_no, tag)
+			if not _protocal_is_bugged:
+				_invalidate_other_caches(cpu_id, set_no, tag)
 			await _read_data_from_ram(cpu_id, mem_address)
 			var new_data = ram[mem_address] + 1
 			_write_in_cache(cpu_id, set_no, tag, new_data, MesiStates.M)
 
 
 func _invalidate_other_caches(cpu_id: int, set_no: int, tag: int) -> void:
-	for c in caches.keys():
-		if cpu_id != c:
-			var block_is_in_another_cache = caches[c].tag[set_no] == tag
-			var other_is_shared = caches[c].status[set_no] == MesiStates.S
-			var other_is_exclusive = caches[c].status[set_no] == MesiStates.E
-			if block_is_in_another_cache and (other_is_shared or other_is_exclusive):
-				_update_cache_state(c, set_no, tag, MesiStates.I)
+	for other_cache_id in _get_other_cache_ids(cpu_id):
+		var block_is_in_another_cache = caches[other_cache_id].tag[set_no] == tag
+		var other_is_shared = caches[other_cache_id].status[set_no] == MesiStates.S
+		var other_is_exclusive = caches[other_cache_id].status[set_no] == MesiStates.E
+		if block_is_in_another_cache and (other_is_shared or other_is_exclusive):
+			_update_cache_state(other_cache_id, set_no, tag, MesiStates.I)
 
 
 func _get_caches_that_need_writeback(cpu_id: int, set_no: int, tag: int) -> Array:
