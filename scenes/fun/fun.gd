@@ -12,6 +12,24 @@ func _ready() -> void:
 
 
 func _start_having_fun() -> void:
+	var we_want_ridiculous_bomb_baby = randi_range(1, 3) % 3
+	if we_want_ridiculous_bomb_baby:
+		await _start_ridiculous_bomb_fun()
+	else:
+		await _start_chase_fun()
+
+
+func _start_ridiculous_bomb_fun() -> void:
+	var bomb = Explosion.instantiate()
+	bomb.global_position = Vector2(400, 320)
+	bomb.scale = Vector2(6, 6)
+	bomb.is_timed = true
+	add_child(bomb)
+	await Signals.fun_huge_explosion_happened
+	Signals.user_fun_requested.connect(_start_having_fun, CONNECT_ONE_SHOT)
+
+
+func _start_chase_fun():
 	bomb_guy.play("run")
 
 	var viewport_size = get_viewport().get_visible_rect().size
@@ -33,6 +51,7 @@ func _start_having_fun() -> void:
 	add_child(bomb)
 
 	await tween.finished
+
 	Signals.user_fun_requested.connect(_start_having_fun, CONNECT_ONE_SHOT)
 
 	bomb_guy.global_position.x = 0.0 - 100.0

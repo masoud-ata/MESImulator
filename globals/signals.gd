@@ -5,6 +5,7 @@ signal animation_speed_factor_changed(factor: float)
 signal background_visibility_toggled(toggled_on: bool)
 
 signal fun_explosion_happened
+signal fun_huge_explosion_happened
 signal user_fun_requested
 signal user_reset_requested
 

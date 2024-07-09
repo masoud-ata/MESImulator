@@ -1,7 +1,8 @@
-[gd_scene load_steps=18 format=3 uid="uid://biw35awrn2a6w"]
+[gd_scene load_steps=19 format=3 uid="uid://biw35awrn2a6w"]
 
 [ext_resource type="PackedScene" uid="uid://bco8y64xv5o0" path="res://scenes/cpu_ui.tscn" id="1_f3ao2"]
 [ext_resource type="Script" path="res://scenes/system_ui.gd" id="1_lx7g6"]
+[ext_resource type="Script" path="res://scenes/camera.gd" id="2_fdmd6"]
 [ext_resource type="Texture2D" uid="uid://c3rq71qgbglmf" path="res://assets/background.png" id="2_ol2r7"]
 [ext_resource type="PackedScene" uid="uid://dhhcghptane4n" path="res://scenes/ram_ui.tscn" id="2_pve52"]
 [ext_resource type="Texture2D" uid="uid://hbdowft7hpav" path="res://assets/background2.png" id="3_g2kka"]
@@ -76,6 +77,10 @@ animations = [{
 
 [node name="SystemUI" type="Node2D"]
 script = ExtResource("1_lx7g6")
+
+[node name="Camera" type="Camera2D" parent="."]
+position = Vector2(404, 246)
+script = ExtResource("2_fdmd6")
 
 [node name="BackgroundPlain" type="ColorRect" parent="."]
 visible = false

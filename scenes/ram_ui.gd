@@ -16,6 +16,7 @@ const DEFAULT_ANIMATION_TIME = 0.1
 
 func _ready() -> void:
 	Signals.fun_explosion_happened.connect(_animate_shake)
+	Signals.fun_huge_explosion_happened.connect(_animate_shake)
 
 	for line in mem_lines:
 		line.pivot_offset = line.size / 2

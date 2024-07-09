@@ -48,6 +48,7 @@ const DEFAULT_ANIMATION_TIME = 0.1
 
 func _ready() -> void:
 	Signals.fun_explosion_happened.connect(_animate_shake)
+	Signals.fun_huge_explosion_happened.connect(_animate_destruction)
 	Signals.animation_speed_factor_changed.connect(_adjust_animation_speed)
 
 	read_a_0.pressed.connect(_send_read_request.bind(read_a_0, 0))
@@ -96,6 +97,22 @@ func _animate_all(displacement: Vector2, random: bool) -> void:
 		if random:
 			displacement = Vector2(randf_range(-20, 20), randf_range(-20, 20))
 		animate.call(line, displacement)
+
+
+func _animate_destruction() -> void:
+	var fall = func(ui):
+		var start_position = ui.global_position
+		var end_position = ui.global_position + Vector2(0, 400)
+		var tween = create_tween()
+		tween.tween_property(ui, "global_position", start_position, randf_range(0, 0.2))
+		tween.tween_property(ui, "global_position", end_position, randf_range(1.5, 2))\
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BOUNCE)
+		tween.tween_property(ui, "global_position", start_position, 0.01)
+
+	for button in all_buttons:
+		fall.call(button)
+	for line in cache_line:
+		fall.call(line)
 
 
 func _send_read_request(button: Button, address: int):
