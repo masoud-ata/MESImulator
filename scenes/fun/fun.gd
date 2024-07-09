@@ -12,7 +12,7 @@ func _ready() -> void:
 
 
 func _start_having_fun() -> void:
-	var we_want_ridiculous_bomb_baby = randi_range(1, 3) % 3
+	var we_want_ridiculous_bomb_baby = randi_range(1, 3) == 3
 	if we_want_ridiculous_bomb_baby:
 		await _start_ridiculous_bomb_fun()
 	else:
