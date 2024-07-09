@@ -25,6 +25,10 @@ func _ready() -> void:
 
 
 func _on_speed_slider_drag_ended(_value_changed: bool) -> void:
+	_on_speed_slider_update()
+
+
+func _on_speed_slider_update() -> void:
 	var speed_factor = speed_slider.value * -0.2 + 1.0
 	Signals.animation_speed_factor_changed.emit(speed_factor)
 
@@ -52,3 +56,9 @@ func _on_background_toggled(toggled_on: bool) -> void:
 
 func _on_bug_toggled(toggled_on: bool) -> void:
 	Signals.bug_toggled.emit(toggled_on)
+
+
+func revert_settings() -> void:
+	_on_speed_slider_update()
+	_on_background_toggled(background_check_button.button_pressed)
+	_on_bug_toggled(bug_check_button.button_pressed)

@@ -19,6 +19,8 @@ func _reset():
 	add_child(SystemUIScene.instantiate())
 	add_child(Fun.instantiate())
 
+	get_node("AlwaysOnTop/SettingsUI").revert_settings()
+
 
 func _free_node(node_name: String) -> void:
 	var node = get_node(node_name)

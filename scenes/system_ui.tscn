@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://biw35awrn2a6w"]
+[gd_scene load_steps=18 format=3 uid="uid://biw35awrn2a6w"]
 
 [ext_resource type="PackedScene" uid="uid://bco8y64xv5o0" path="res://scenes/cpu_ui.tscn" id="1_f3ao2"]
 [ext_resource type="Script" path="res://scenes/system_ui.gd" id="1_lx7g6"]
@@ -8,7 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://hbdowft7hpav" path="res://assets/background2.png" id="3_g2kka"]
 [ext_resource type="Texture2D" uid="uid://cd1km0wnv2yn5" path="res://assets/falling_star.png" id="4_d70sq"]
 [ext_resource type="Texture2D" uid="uid://b6c1l7vx6u4hj" path="res://assets/tilemap1.png" id="4_qjgjy"]
-[ext_resource type="PackedScene" uid="uid://cal5d4vh1082r" path="res://scenes/settings_ui.tscn" id="6_2wsm0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p3g7c"]
 atlas = ExtResource("4_d70sq")
@@ -112,9 +111,6 @@ frame_progress = 1.0
 [node name="StarTimer" type="Timer" parent="."]
 wait_time = 25.0
 autostart = true
-
-[node name="Settings" parent="." instance=ExtResource("6_2wsm0")]
-position = Vector2(664, 13)
 
 [node name="CPU0" parent="." instance=ExtResource("1_f3ao2")]
 position = Vector2(65, 266)
