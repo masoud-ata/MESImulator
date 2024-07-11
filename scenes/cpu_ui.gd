@@ -8,6 +8,7 @@ const DEFAULT_ANIMATION_TIME = 0.1
 @export var animation_scale_factor := Vector2(1.1, 1.1)
 @export var animation_time := DEFAULT_ANIMATION_TIME
 
+
 @onready var read_a_0: Button = %ReadA0
 @onready var read_a_1: Button = %ReadA1
 @onready var read_a_2: Button = %ReadA2
@@ -102,12 +103,19 @@ func _animate_all(displacement: Vector2, random: bool) -> void:
 func _animate_destruction() -> void:
 	var fall = func(ui):
 		var start_position = ui.global_position
-		var end_position = ui.global_position + Vector2(0, 400)
+		var top_offset = Vector2(randf_range(-50, 50), randf_range(-30, -70))
+		var peak_position = start_position + top_offset
+		var end_position = peak_position + Vector2(top_offset.x * 2, 400)
+
 		var tween = create_tween()
-		tween.tween_property(ui, "global_position", start_position, randf_range(0, 0.2))
-		tween.tween_property(ui, "global_position", end_position, randf_range(1.5, 2))\
+		tween.tween_property(ui, "global_position", peak_position, randf_range(.2, 0.3))\
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_property(ui, "global_position", end_position, randf_range(1.0, 1.5))\
 		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BOUNCE)
 		tween.tween_property(ui, "global_position", start_position, 0.01)
+		tween.tween_property(ui, "scale", Vector2(1.3, 1.3), 0.1)
+		tween.tween_property(ui, "scale", Vector2(1.0, 1.0), 0.1)\
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 
 	for button in all_buttons:
 		fall.call(button)
