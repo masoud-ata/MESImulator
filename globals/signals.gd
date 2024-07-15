@@ -10,12 +10,15 @@ signal fun_explosion_happened
 signal fun_huge_explosion_happened
 signal user_fun_requested
 signal user_reset_requested
+signal user_back_requested
 
 signal user_read_requested(cpu_id: int, memory_address: int)
 signal user_write_requested(cpu_id: int, memory_address: int)
 signal cpu_read_issued(cpu_id: int, memory_address: int)
 signal cpu_write_issued(cpu_id: int, memory_address: int)
 signal cpu_read_or_write_handled
+signal cpu_back_requested
+signal force_system_contents_requested(cache_contents: Dictionary, ram_contents: Array)
 
 signal write_transaction_performed_in_cache(cpu_id: int, set_no: int, tag: int, data: int)
 signal read_transaction_performed_in_cache(cpu_id: int, set_no: int, tag: int, state: String)
@@ -30,4 +33,4 @@ signal cache_state_updated(cpu_id: int, set_no: int)
 
 signal transaction_finished
 
-signal all_new_transaction_started
+signal new_visuals_transaction_started

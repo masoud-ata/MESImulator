@@ -52,7 +52,7 @@ const DEFAULT_ANIMATION_TIME = 0.5
 func _ready() -> void:
 	Signals.animation_speed_factor_changed.connect(_adjust_animation_speed)
 	Signals.background_visibility_toggled.connect(_background_visibility_toggled)
-	Signals.all_new_transaction_started.connect(_clear_visuals)
+	Signals.new_visuals_transaction_started.connect(_clear_visuals)
 	Signals.cache_state_updated.connect(_cache_state_updated)
 	Signals.write_transaction_performed_in_cache.connect(_write_transaction_performed_in_cache)
 	Signals.read_transaction_performed_in_cache.connect(_read_transaction_performed_in_cache)
@@ -60,6 +60,7 @@ func _ready() -> void:
 	Signals.read_transaction_started_from_ram.connect(_read_transaction_started_from_ram)
 	Signals.read_transaction_started_from_other_cache.connect(_read_transaction_started_from_other_cache)
 	Signals.write_transaction_started_to_ram.connect(_write_transaction_started_to_ram)
+	Signals.force_system_contents_requested.connect(_force_system_contents)
 
 	_clear_bus_visuals()
 
@@ -183,3 +184,22 @@ func _cache_state_updated(cpu_id: int, set_no: int, tag: int, state: String) -> 
 
 func _on_star_timer_timeout() -> void:
 	falling_star.play("default")
+
+
+enum MesiStates { I, E, S, M }
+func _force_system_contents(cache_contents: Dictionary, ram_contents: Array) -> void:
+	_clear_bus_visuals()
+	_clear_cache_visuals()
+	_clear_memory_visuals()
+	ram_ui.set_mem_values(ram_contents)
+	ram_ui.animate_previously_modified_lines()
+	for i in 3:
+		cpus[i].set_cache_content(
+			0, cache_contents[i].tag[0], cache_contents[i].data[0],
+			MesiStates.keys()[cache_contents[i].status[0]]
+		)
+		cpus[i].set_cache_content(
+			1, cache_contents[i].tag[1], cache_contents[i].data[1],
+			MesiStates.keys()[cache_contents[i].status[1]]
+		)
+		cpus[i].animate_previously_modified_lines()

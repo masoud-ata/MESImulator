@@ -8,11 +8,13 @@ class Request:
 
 var request_queue: Array[Request] = []
 var _busy_handling_request := false
+var _back_requested := false
 
 
 func _ready() -> void:
 	Signals.user_read_requested.connect(_user_read_requested)
 	Signals.user_write_requested.connect(_user_write_requested)
+	Signals.user_back_requested.connect(_user_back_requested)
 	Signals.cpu_read_or_write_handled.connect(_cpu_read_or_write_handled)
 
 
@@ -24,9 +26,20 @@ func _user_write_requested(cpu_id: int, memory_address: int) -> void:
 	_add_request(cpu_id, memory_address, false)
 
 
+func _user_back_requested() -> void:
+	if _busy_handling_request:
+		_back_requested = true
+	else:
+		Signals.cpu_back_requested.emit()
+
+
 func _cpu_read_or_write_handled() -> void:
 	_busy_handling_request = false
-	if not request_queue.is_empty():
+	if _back_requested:
+		_back_requested = false
+		request_queue.clear()
+		return
+	elif not request_queue.is_empty():
 		var request = request_queue.pop_front()
 		_issue_request(request)
 

@@ -3,6 +3,15 @@ extends Node2D
 
 const DEFAULT_ANIMATION_TIME = 0.1
 
+
+@export var animation_scale_factor := Vector2(1.1, 1.1)
+@export var animation_time := DEFAULT_ANIMATION_TIME
+
+
+var modified_lines_in_this_transaction: Array[int] = []
+var modified_lines_in_all_transactions := []
+
+
 @onready var mem_lines: Array[PanelContainer] = [
 	$PanelContainer/VBoxContainer/PanelContainer,
 	$PanelContainer/VBoxContainer/PanelContainer2,
@@ -10,13 +19,11 @@ const DEFAULT_ANIMATION_TIME = 0.1
 	$PanelContainer/VBoxContainer/PanelContainer4,
 ]
 
-@export var animation_scale_factor := Vector2(1.1, 1.1)
-@export var animation_time := DEFAULT_ANIMATION_TIME
-
 
 func _ready() -> void:
 	Signals.fun_explosion_happened.connect(_animate_shake)
 	Signals.fun_huge_explosion_happened.connect(_animate_shake)
+	Signals.cpu_read_or_write_handled.connect(_cpu_read_or_write_handled)
 
 	for line in mem_lines:
 		line.pivot_offset = line.size / 2
@@ -64,6 +71,8 @@ func animate_mem_line_read(mem_address: int) -> void:
 
 
 func animate_mem_line_write(mem_address: int, data: int) -> void:
+	modified_lines_in_this_transaction.append(mem_address)
+
 	mem_lines[mem_address].get_child(0).get_child(1).text = str(data)
 	mem_lines[mem_address].get_child(0).get_child(0).set("theme_override_colors/font_color", Color.TOMATO)
 	mem_lines[mem_address].get_child(0).get_child(1).set("theme_override_colors/font_color", Color.TOMATO)
@@ -71,3 +80,22 @@ func animate_mem_line_write(mem_address: int, data: int) -> void:
 	tween.tween_property(mem_lines[mem_address], "scale", animation_scale_factor, animation_time / 2)
 	tween.tween_property(mem_lines[mem_address], "scale", Vector2.ONE, animation_time / 2)\
 	.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+
+
+func animate_previously_modified_lines() -> void:
+	var modified_lines = modified_lines_in_all_transactions.pop_back()
+	for line in modified_lines:
+		var tween = create_tween()
+		tween.tween_property(mem_lines[line], "scale", animation_scale_factor, animation_time / 2)
+		tween.tween_property(mem_lines[line], "scale", Vector2.ONE, animation_time / 2)\
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+
+
+func set_mem_values(contents: Array) -> void:
+	for i in mem_lines.size():
+		mem_lines[i].get_child(0).get_child(1).text = str(contents[i])
+
+
+func _cpu_read_or_write_handled() -> void:
+	modified_lines_in_all_transactions.append(modified_lines_in_this_transaction.duplicate())
+	modified_lines_in_this_transaction.clear()

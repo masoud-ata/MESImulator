@@ -9,6 +9,10 @@ const DEFAULT_ANIMATION_TIME = 0.1
 @export var animation_time := DEFAULT_ANIMATION_TIME
 
 
+var modified_lines_in_this_transaction: Array[int] = []
+var modified_lines_in_all_transactions := []
+
+
 @onready var read_a_0: Button = %ReadA0
 @onready var read_a_1: Button = %ReadA1
 @onready var read_a_2: Button = %ReadA2
@@ -51,6 +55,7 @@ func _ready() -> void:
 	Signals.fun_explosion_happened.connect(_animate_shake)
 	Signals.fun_huge_explosion_happened.connect(_animate_destruction)
 	Signals.animation_speed_factor_changed.connect(_adjust_animation_speed)
+	Signals.cpu_read_or_write_handled.connect(_cpu_read_or_write_handled)
 
 	read_a_0.pressed.connect(_send_read_request.bind(read_a_0, 0))
 	read_a_1.pressed.connect(_send_read_request.bind(read_a_1, 1))
@@ -158,11 +163,21 @@ func _animate_button(button: Button) -> void:
 
 
 func update_cache_content(set_no: int, tag: int, value: int) -> void:
+	modified_lines_in_this_transaction.append(set_no)
+
 	cache_value[set_no].text = str(value)
 	cache_tag[set_no].text = "a" + str(tag*2 + set_no)
 
 
 func update_cache_state(set_no: int, tag: int, state: String) -> void:
+	modified_lines_in_this_transaction.append(set_no)
+
+	cache_tag[set_no].text = "a" + str(tag*2 + set_no)
+	cache_state[set_no].text = state
+
+
+func set_cache_content(set_no: int, tag: int, value: int, state: String) -> void:
+	cache_value[set_no].text = str(value)
 	cache_tag[set_no].text = "a" + str(tag*2 + set_no)
 	cache_state[set_no].text = state
 
@@ -172,3 +187,14 @@ func animate_cache_content(set_no: int) -> void:
 	tween.tween_property(cache_line[set_no], "scale", animation_scale_factor, DEFAULT_ANIMATION_TIME)
 	tween.tween_property(cache_line[set_no], "scale", Vector2.ONE, DEFAULT_ANIMATION_TIME)\
 	.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BOUNCE)
+
+
+func _cpu_read_or_write_handled() -> void:
+	modified_lines_in_all_transactions.append(modified_lines_in_this_transaction.duplicate())
+	modified_lines_in_this_transaction.clear()
+
+
+func animate_previously_modified_lines() -> void:
+	var modified_lines = modified_lines_in_all_transactions.pop_back()
+	for line in modified_lines:
+		animate_cache_content(line)

@@ -10,13 +10,16 @@ class Cache:
 	var status: Array[MesiStates] = [MesiStates.I, MesiStates.I]
 
 
-var caches = {
+var caches := {
 	0: Cache.new(),
 	1: Cache.new(),
 	2: Cache.new()
 }
 
 var ram: Array[int] = [0, 0, 0, 0]
+
+var archive_caches := []
+var archive_ram := []
 
 var _protocal_is_bugged := false
 
@@ -25,12 +28,41 @@ var _protocal_is_bugged := false
 
 
 func _ready() -> void:
+	Signals.cpu_back_requested.connect(_cpu_go_back_in_time)
 	Signals.cpu_read_issued.connect(_handle_read)
 	Signals.cpu_write_issued.connect(_handle_write)
 	Signals.bug_toggled.connect(func(is_bugged: bool): _protocal_is_bugged = is_bugged)
 
 
+func _deep_caches_copy(to: Dictionary, from: Dictionary):
+	for i in 3:
+		to[i].tag = from[i].tag.duplicate()
+		to[i].data = from[i].data.duplicate()
+		to[i].status = from[i].status.duplicate()
+
+
+func _archive_caches_copy() -> void:
+	var copy_caches := {
+		0: Cache.new(),
+		1: Cache.new(),
+		2: Cache.new()
+	}
+	_deep_caches_copy(copy_caches, caches)
+	archive_caches.append(copy_caches)
+
+
+func _cpu_go_back_in_time() -> void:
+	if not archive_caches.is_empty():
+		var previous_caches_contents = archive_caches.pop_back()
+		_deep_caches_copy(caches, previous_caches_contents)
+		ram = archive_ram.pop_back()
+		Signals.force_system_contents_requested.emit(previous_caches_contents, ram)
+
+
 func _handle_read(cpu_id: int, mem_address: int) -> void:
+	_archive_caches_copy()
+	archive_ram.append(ram.duplicate())
+
 	var tag = mem_address >> 1
 	var set_no = mem_address % 2
 	var block_is_in_cache = caches[cpu_id].tag[set_no] == tag
@@ -40,7 +72,7 @@ func _handle_read(cpu_id: int, mem_address: int) -> void:
 	if not block_is_in_cache and needs_writeback:
 		await _writeback_block_to_ram(cpu_id, set_no)
 
-	Signals.all_new_transaction_started.emit()
+	Signals.new_visuals_transaction_started.emit()
 
 	if (block_is_in_cache and block_is_invalid) or not block_is_in_cache:
 		await _snoop_read(cpu_id, mem_address)
@@ -53,13 +85,16 @@ func _handle_read(cpu_id: int, mem_address: int) -> void:
 
 
 func _handle_write(cpu_id: int, mem_address: int) -> void:
+	_archive_caches_copy()
+	archive_ram.append(ram.duplicate())
+
 	var tag = mem_address >> 1
 	var set_no = mem_address % 2
 	var block_is_in_cache = caches[cpu_id].tag[set_no] == tag
 	var block_is_exclusive = caches[cpu_id].status[set_no] == MesiStates.E
 	var block_is_modified = caches[cpu_id].status[set_no] == MesiStates.M
 
-	Signals.all_new_transaction_started.emit()
+	Signals.new_visuals_transaction_started.emit()
 
 	if block_is_in_cache and (block_is_exclusive or block_is_modified):
 		var new_data = caches[cpu_id].data[set_no] + 1
@@ -71,7 +106,7 @@ func _handle_write(cpu_id: int, mem_address: int) -> void:
 
 
 func _writeback_block_to_ram(cpu_id: int, set_no: int) -> void:
-	Signals.all_new_transaction_started.emit()
+	Signals.new_visuals_transaction_started.emit()
 	var writeback_address = caches[cpu_id].tag[set_no] * 2 + set_no
 	Signals.write_transaction_started_to_ram.emit(cpu_id, writeback_address, caches[cpu_id].data[set_no])
 	await Signals.transaction_finished
@@ -184,7 +219,7 @@ func _snoop_write(cpu_id: int, mem_address: int) -> void:
 
 		if writeback_in_this_cache_needed:
 			await _writeback_block_to_ram(cpu_id, set_no)
-			Signals.all_new_transaction_started.emit()
+			Signals.new_visuals_transaction_started.emit()
 
 		if writeback_in_another_cache_needed:
 			await _place_address_on_buses(cpu_id, mem_address)
