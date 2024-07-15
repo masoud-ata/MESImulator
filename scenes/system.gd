@@ -69,6 +69,8 @@ func _handle_read(cpu_id: int, mem_address: int) -> void:
 	var block_is_invalid = caches[cpu_id].status[set_no] == MesiStates.I
 	var needs_writeback = caches[cpu_id].status[set_no] == MesiStates.M
 
+	Signals.all_new_transaction_started.emit(cpu_id, mem_address, "Read")
+
 	if not block_is_in_cache and needs_writeback:
 		await _writeback_block_to_ram(cpu_id, set_no)
 
@@ -94,6 +96,7 @@ func _handle_write(cpu_id: int, mem_address: int) -> void:
 	var block_is_exclusive = caches[cpu_id].status[set_no] == MesiStates.E
 	var block_is_modified = caches[cpu_id].status[set_no] == MesiStates.M
 
+	Signals.all_new_transaction_started.emit(cpu_id, mem_address, "Write")
 	Signals.new_visuals_transaction_started.emit()
 
 	if block_is_in_cache and (block_is_exclusive or block_is_modified):

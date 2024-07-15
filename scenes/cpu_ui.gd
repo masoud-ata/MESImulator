@@ -3,6 +3,7 @@ extends Node2D
 
 const DEFAULT_ANIMATION_TIME = 0.1
 
+
 @export var id: int
 
 @export var animation_scale_factor := Vector2(1.1, 1.1)
@@ -12,6 +13,11 @@ const DEFAULT_ANIMATION_TIME = 0.1
 var modified_lines_in_this_transaction: Array[int] = []
 var modified_lines_in_all_transactions := []
 
+var all_transactions_labels: Array[String] = []
+var transaction_label_init_position : Vector2
+
+
+@onready var transaction_label: Label = $TransactionLabel
 
 @onready var read_a_0: Button = %ReadA0
 @onready var read_a_1: Button = %ReadA1
@@ -56,6 +62,7 @@ func _ready() -> void:
 	Signals.fun_huge_explosion_happened.connect(_animate_destruction)
 	Signals.animation_speed_factor_changed.connect(_adjust_animation_speed)
 	Signals.cpu_read_or_write_handled.connect(_cpu_read_or_write_handled)
+	Signals.all_new_transaction_started.connect(_all_new_transaction_started)
 
 	read_a_0.pressed.connect(_send_read_request.bind(read_a_0, 0))
 	read_a_1.pressed.connect(_send_read_request.bind(read_a_1, 1))
@@ -75,6 +82,8 @@ func _ready() -> void:
 	_init_contents()
 
 	_animate_intro.call_deferred()
+
+	transaction_label_init_position = transaction_label.global_position
 
 
 func _animate_intro() -> void:
@@ -200,3 +209,31 @@ func animate_previously_modified_lines() -> void:
 	var modified_lines = modified_lines_in_all_transactions.pop_back()
 	for line in modified_lines:
 		animate_cache_content(line)
+
+
+func animate_previous_transaction_label() -> void:
+	all_transactions_labels.pop_back()
+	var label = "" if all_transactions_labels.is_empty() else all_transactions_labels[-1]
+	transaction_label.global_position = transaction_label_init_position
+	transaction_label.show()
+	transaction_label.text = label
+	var tween = create_tween()
+	tween.tween_property(transaction_label, "global_position:y", transaction_label_init_position.y - 7, .1)\
+	.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BOUNCE)
+
+
+func _all_new_transaction_started(cpu_id: int, memory_address: int, type: String) -> void:
+	transaction_label.global_position = transaction_label_init_position
+	if cpu_id == id:
+		transaction_label.show()
+		transaction_label.text = type + " " + "a" + str(memory_address)
+		var tween = create_tween()
+		tween.tween_property(transaction_label, "global_position:y", transaction_label_init_position.y - 7, .1)\
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BOUNCE)
+
+		all_transactions_labels.append(transaction_label.text)
+	else:
+		transaction_label.hide()
+		all_transactions_labels.append("")
+
+

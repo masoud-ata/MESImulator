@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://bco8y64xv5o0"]
+[gd_scene load_steps=4 format=3 uid="uid://bco8y64xv5o0"]
 
 [ext_resource type="Script" path="res://scenes/cpu_ui.gd" id="1_8ai7d"]
 [ext_resource type="AudioStream" uid="uid://cs028rkc30ns2" path="res://assets/click.ogg" id="2_kdny7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i8oyr"]
 
 [node name="CPUUI" type="Node2D"]
 script = ExtResource("1_8ai7d")
@@ -143,3 +145,12 @@ text = "Write a3"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_kdny7")
+
+[node name="TransactionLabel" type="Label" parent="."]
+visible = false
+offset_left = 35.0
+offset_top = 81.0
+offset_right = 76.0
+offset_bottom = 96.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_i8oyr")
+text = "Read a0"

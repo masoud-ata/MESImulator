@@ -34,3 +34,4 @@ signal cache_state_updated(cpu_id: int, set_no: int)
 signal transaction_finished
 
 signal new_visuals_transaction_started
+signal all_new_transaction_started(cpu_id: int, memory_address: int, type: String)

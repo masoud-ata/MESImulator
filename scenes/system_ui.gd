@@ -203,3 +203,4 @@ func _force_system_contents(cache_contents: Dictionary, ram_contents: Array) -> 
 			MesiStates.keys()[cache_contents[i].status[1]]
 		)
 		cpus[i].animate_previously_modified_lines()
+		cpus[i].animate_previous_transaction_label()
