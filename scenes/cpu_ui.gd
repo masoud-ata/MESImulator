@@ -145,6 +145,8 @@ func _init_contents() -> void:
 		val.text = "0"
 	for state in cache_state:
 		state.text = "I"
+	for i in cache_tag.size():
+		cache_tag[i].text = "a" + str(i)
 
 
 func _adjust_animation_speed(factor: float) -> void:
