@@ -12,7 +12,7 @@ script = ExtResource("1_if5sl")
 [node name="AlwaysOnTop" type="CanvasLayer" parent="."]
 
 [node name="SettingsUI" parent="AlwaysOnTop" instance=ExtResource("2_ctno4")]
-position = Vector2(674, 14)
+position = Vector2(631, 4)
 
 [node name="System" parent="." instance=ExtResource("2_d8ena")]
 

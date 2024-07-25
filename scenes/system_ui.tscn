@@ -113,21 +113,21 @@ wait_time = 25.0
 autostart = true
 
 [node name="CPU0" parent="." instance=ExtResource("1_f3ao2")]
-position = Vector2(65, 266)
+position = Vector2(63, 272)
 
 [node name="CPU1" parent="." instance=ExtResource("1_f3ao2")]
-position = Vector2(325, 267)
+position = Vector2(323, 273)
 id = 1
 
 [node name="CPU2" parent="." instance=ExtResource("1_f3ao2")]
-position = Vector2(585, 266)
+position = Vector2(583, 272)
 id = 2
 
 [node name="RamUI" parent="." instance=ExtResource("2_pve52")]
-position = Vector2(320, 12)
+position = Vector2(339, 4)
 
 [node name="Buses" type="Node2D" parent="."]
-position = Vector2(0, -22)
+position = Vector2(12, -16)
 
 [node name="DataBus" type="CanvasGroup" parent="Buses"]
 position = Vector2(-91, -4)
@@ -155,10 +155,10 @@ region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
 [node name="BusNameLabel" type="Label" parent="Buses/DataBus"]
-offset_left = 141.0
-offset_top = 218.0
-offset_right = 185.0
-offset_bottom = 238.0
+offset_left = 142.0
+offset_top = 212.0
+offset_right = 186.0
+offset_bottom = 234.0
 theme_override_styles/normal = SubResource("StyleBoxEmpty_pnh4g")
 text = "Data"
 
@@ -188,10 +188,10 @@ region_enabled = true
 region_rect = Rect2(27, 63, 8, 8)
 
 [node name="BusNameLabel" type="Label" parent="Buses/AddressBus"]
-offset_left = 141.0
-offset_top = 218.0
-offset_right = 185.0
-offset_bottom = 238.0
+offset_left = 142.0
+offset_top = 209.0
+offset_right = 210.0
+offset_bottom = 231.0
 theme_override_styles/normal = SubResource("StyleBoxEmpty_pnh4g")
 text = "Address"
 
