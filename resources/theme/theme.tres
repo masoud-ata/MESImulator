@@ -1,7 +1,7 @@
 [gd_resource type="Theme" load_steps=18 format=3 uid="uid://64ety4iufu0f"]
 
 [ext_resource type="Texture2D" uid="uid://dyblgjqtmjgh1" path="res://assets/ui.png" id="1_8m35k"]
-[ext_resource type="FontFile" uid="uid://n1va110ofcvf" path="res://resources/theme/RobotoMono-Regular.ttf" id="2_xqipf"]
+[ext_resource type="FontFile" uid="uid://xxagd6vcn61x" path="res://resources/theme/RobotoMono-Bold.ttf" id="2_ndia7"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_22nx0"]
 
@@ -74,7 +74,7 @@ texture_margin_bottom = 3.0
 region_rect = Rect2(32, 16, 16, 16)
 
 [resource]
-default_font = ExtResource("2_xqipf")
+default_font = ExtResource("2_ndia7")
 default_font_size = 14
 Button/colors/font_color = Color(0.196078, 0.14902, 0.192157, 1)
 Button/colors/font_focus_color = Color(0.196078, 0.14902, 0.192157, 1)
