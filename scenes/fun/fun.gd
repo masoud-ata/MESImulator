@@ -21,7 +21,7 @@ func _start_having_fun() -> void:
 
 func _start_ridiculous_bomb_fun() -> void:
 	var bomb = Explosion.instantiate()
-	bomb.global_position = Vector2(400, 320)
+	bomb.global_position = Vector2(400, 380)
 	bomb.scale = Vector2(6, 6)
 	bomb.is_timed = true
 	add_child(bomb)
@@ -42,7 +42,7 @@ func _start_chase_fun():
 
 	var chaser = Chaser.instantiate()
 	add_child(chaser)
-	chaser.global_position = Vector2(-100, viewport_size.y)
+	chaser.global_position = Vector2(-100, viewport_size.y + 5)
 
 	await get_tree().create_timer(0.5).timeout
 

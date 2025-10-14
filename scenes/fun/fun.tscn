@@ -70,7 +70,7 @@ animations = [{
 script = ExtResource("1_31a2s")
 
 [node name="BombGuy" type="AnimatedSprite2D" parent="."]
-position = Vector2(-88.5, 469)
+position = Vector2(-87, 525)
 sprite_frames = SubResource("SpriteFrames_ukn4g")
 animation = &"run"
 frame_progress = 0.586533

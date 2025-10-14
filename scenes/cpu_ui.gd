@@ -119,7 +119,7 @@ func _animate_destruction() -> void:
 		var start_position = ui.global_position
 		var top_offset = Vector2(randf_range(-50, 50), randf_range(-30, -70))
 		var peak_position = start_position + top_offset
-		var end_position = peak_position + Vector2(top_offset.x * 2, 400)
+		var end_position = peak_position + Vector2(top_offset.x * 2, 420)
 
 		var tween = create_tween()
 		tween.tween_property(ui, "global_position", peak_position, randf_range(.2, 0.3))\
@@ -235,5 +235,3 @@ func _all_new_transaction_started(cpu_id: int, memory_address: int, type: String
 	else:
 		transaction_label.hide()
 		all_transactions_labels.append("")
-
-

@@ -13,7 +13,7 @@ config_version=5
 config/name="MESImulator"
 config/tags=PackedStringArray("game")
 run/main_scene="res://scenes/program.tscn"
-config/features=PackedStringArray("4.2", "Forward Plus")
+config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -23,9 +23,9 @@ Signals="*res://globals/signals.gd"
 [display]
 
 window/size/viewport_width=800
-window/size/viewport_height=500
+window/size/viewport_height=550
 window/size/window_width_override=1600
-window/size/window_height_override=1000
+window/size/window_height_override=1100
 window/stretch/mode="canvas_items"
 
 [gui]

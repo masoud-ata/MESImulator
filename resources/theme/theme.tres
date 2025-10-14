@@ -75,7 +75,7 @@ region_rect = Rect2(32, 16, 16, 16)
 
 [resource]
 default_font = ExtResource("2_ndia7")
-default_font_size = 14
+default_font_size = 16
 Button/colors/font_color = Color(0.196078, 0.14902, 0.192157, 1)
 Button/colors/font_focus_color = Color(0.196078, 0.14902, 0.192157, 1)
 Button/colors/font_hover_color = Color(0.741176, 0.423529, 0.290196, 1)

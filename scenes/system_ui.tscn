@@ -78,27 +78,27 @@ animations = [{
 script = ExtResource("1_lx7g6")
 
 [node name="Camera" type="Camera2D" parent="."]
-position = Vector2(404, 246)
+position = Vector2(400, 280)
 script = ExtResource("2_fdmd6")
 
 [node name="BackgroundPlain" type="ColorRect" parent="."]
 visible = false
 modulate = Color(0.129412, 0.129412, 0.168627, 1)
-offset_left = -39.0
-offset_top = -22.0
-offset_right = 834.0
-offset_bottom = 525.0
+offset_left = -10.0
+offset_top = -7.0
+offset_right = 813.0
+offset_bottom = 557.0
 
 [node name="BackgroundSpace1" type="Sprite2D" parent="."]
-position = Vector2(397, 248)
-scale = Vector2(0.808594, 0.863333)
+position = Vector2(400, 274.5)
+scale = Vector2(0.794922, 0.938333)
 texture = ExtResource("2_ol2r7")
 
 [node name="BackgroundSpace2" type="Sprite2D" parent="."]
 visible = false
 self_modulate = Color(1, 1, 1, 0.713726)
-position = Vector2(404, 255.5)
-scale = Vector2(1.3, 1.50278)
+position = Vector2(398, 273)
+scale = Vector2(1.28125, 1.6)
 texture = ExtResource("3_g2kka")
 
 [node name="FallingStar" type="AnimatedSprite2D" parent="."]
@@ -113,21 +113,21 @@ wait_time = 25.0
 autostart = true
 
 [node name="CPU0" parent="." instance=ExtResource("1_f3ao2")]
-position = Vector2(63, 272)
+position = Vector2(59, 302)
 
 [node name="CPU1" parent="." instance=ExtResource("1_f3ao2")]
-position = Vector2(323, 273)
+position = Vector2(319, 303)
 id = 1
 
 [node name="CPU2" parent="." instance=ExtResource("1_f3ao2")]
-position = Vector2(583, 272)
+position = Vector2(579, 302)
 id = 2
 
 [node name="RamUI" parent="." instance=ExtResource("2_pve52")]
-position = Vector2(339, 4)
+position = Vector2(335, 34)
 
 [node name="Buses" type="Node2D" parent="."]
-position = Vector2(12, -16)
+position = Vector2(8, 14)
 
 [node name="DataBus" type="CanvasGroup" parent="Buses"]
 position = Vector2(-91, -4)
